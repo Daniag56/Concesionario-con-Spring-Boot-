@@ -17,48 +17,46 @@ public class ExtraWebController {
     }
 
     @GetMapping("/lista")
-    public String listaExtras(Model model) {
+    public String listar(Model model) {
         model.addAttribute("listaExtras", extraRepository.findAll());
-        return "extras-lista";
+        return "extras/lista";
     }
 
-    @GetMapping("/nuevo")
-    public String nuevoExtra(Model model) {
+    @GetMapping({"/crear", "/nuevo"})
+    public String crear(Model model) {
+        model.addAttribute("titulo", "Nuevo Extra");
         model.addAttribute("extra", new Extra());
-        return "extra-form";
+        model.addAttribute("accion", "/extras/guardar");
+        return "extras/form";
     }
 
     @PostMapping("/guardar")
-    public String guardarExtra(Extra extra) {
+    public String guardar(Extra extra) {
         extraRepository.save(extra);
         return "redirect:/extras/lista";
     }
 
     @GetMapping("/editar/{id}")
-    public String editarExtra(@PathVariable Long id, Model model) {
-        model.addAttribute("extra", extraRepository.findById(id).orElse(null));
-        return "extra-form";
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Extra");
+        model.addAttribute("extra", extraRepository.findById(id).orElseThrow());
+        model.addAttribute("accion", "/extras/editar/" + id);
+        return "extras/form";
     }
 
     @PostMapping("/editar/{id}")
     public String guardarEdicion(@PathVariable Long id, Extra actualizado) {
-
-        Extra extra = extraRepository.findById(id).orElse(null);
-
-        if (extra != null) {
-            extra.setNombre(actualizado.getNombre());
-            extra.setDescripcion(actualizado.getDescripcion());
-            extra.setPrecioAdicional(actualizado.getPrecioAdicional());
-            extraRepository.save(extra);
-        }
-
+        Extra extra = extraRepository.findById(id).orElseThrow();
+        extra.setNombre(actualizado.getNombre());
+        extra.setDescripcion(actualizado.getDescripcion());
+        extra.setPrecioAdicional(actualizado.getPrecioAdicional());
+        extraRepository.save(extra);
         return "redirect:/extras/lista";
     }
 
-    @GetMapping("/eliminar/{id}")
-    public String eliminarExtra(@PathVariable Long id) {
+    @PostMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable Long id) {
         extraRepository.deleteById(id);
         return "redirect:/extras/lista";
     }
 }
-

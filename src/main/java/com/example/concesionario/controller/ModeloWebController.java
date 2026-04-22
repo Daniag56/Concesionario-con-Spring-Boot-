@@ -15,69 +15,62 @@ public class ModeloWebController {
     private final ModeloRepository modeloRepository;
     private final MarcaRepository marcaRepository;
 
-    public ModeloWebController(ModeloRepository modeloRepository,
-                               MarcaRepository marcaRepository) {
+    public ModeloWebController(ModeloRepository modeloRepository, MarcaRepository marcaRepository) {
         this.modeloRepository = modeloRepository;
         this.marcaRepository = marcaRepository;
     }
 
     @GetMapping("/lista")
-    public String listaModelos(Model model) {
+    public String listar(Model model) {
         model.addAttribute("listaModelos", modeloRepository.findAll());
-        return "modelos-lista";
+        return "modelos/lista";
     }
 
-    @GetMapping("/nuevo")
-    public String nuevoModelo(Model model) {
+    @GetMapping({"/crear", "/nuevo"})
+    public String crear(Model model) {
+        model.addAttribute("titulo", "Nuevo Modelo");
         model.addAttribute("modelo", new Modelo());
         model.addAttribute("marcas", marcaRepository.findAll());
-        return "modelo-form";
+        model.addAttribute("accion", "/modelos/guardar");
+        return "modelos/form";
     }
 
     @PostMapping("/guardar")
-    public String guardarModelo(Modelo modelo) {
-
+    public String guardar(Modelo modelo) {
         if (modelo.getMarca() != null && modelo.getMarca().getId() != null) {
-            Marca marcaReal = marcaRepository.findById(modelo.getMarca().getId()).orElse(null);
+            Marca marcaReal = marcaRepository.findById(modelo.getMarca().getId()).orElseThrow();
             modelo.setMarca(marcaReal);
         }
-
         modeloRepository.save(modelo);
         return "redirect:/modelos/lista";
     }
 
     @GetMapping("/editar/{id}")
-    public String editarModelo(@PathVariable Long id, Model model) {
-        model.addAttribute("modelo", modeloRepository.findById(id).orElse(null));
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Modelo");
+        model.addAttribute("modelo", modeloRepository.findById(id).orElseThrow());
         model.addAttribute("marcas", marcaRepository.findAll());
-        return "modelo-form";
+        model.addAttribute("accion", "/modelos/editar/" + id);
+        return "modelos/form";
     }
 
     @PostMapping("/editar/{id}")
-    public String guardarEdicion(@PathVariable Long id, Modelo modeloActualizado) {
-
-        Modelo modelo = modeloRepository.findById(id).orElse(null);
-
-        if (modelo != null) {
-            modelo.setNombre(modeloActualizado.getNombre());
-            modelo.setAnioLanzamiento(modeloActualizado.getAnioLanzamiento());
-            modelo.setNumeroPlazas(modeloActualizado.getNumeroPlazas());
-            modelo.setTipoCarroceria(modeloActualizado.getTipoCarroceria());
-            modelo.setPotenciaCv(modeloActualizado.getPotenciaCv());
-
-            if (modeloActualizado.getMarca() != null && modeloActualizado.getMarca().getId() != null) {
-                Marca marcaReal = marcaRepository.findById(modeloActualizado.getMarca().getId()).orElse(null);
-                modelo.setMarca(marcaReal);
-            }
-
-            modeloRepository.save(modelo);
+    public String guardarEdicion(@PathVariable Long id, Modelo actualizado) {
+        Modelo modelo = modeloRepository.findById(id).orElseThrow();
+        modelo.setNombre(actualizado.getNombre());
+        modelo.setAnioLanzamiento(actualizado.getAnioLanzamiento());
+        modelo.setNumeroPlazas(actualizado.getNumeroPlazas());
+        modelo.setTipoCarroceria(actualizado.getTipoCarroceria());
+        modelo.setPotenciaCv(actualizado.getPotenciaCv());
+        if (actualizado.getMarca() != null && actualizado.getMarca().getId() != null) {
+            modelo.setMarca(marcaRepository.findById(actualizado.getMarca().getId()).orElseThrow());
         }
-
+        modeloRepository.save(modelo);
         return "redirect:/modelos/lista";
     }
 
-    @GetMapping("/eliminar/{id}")
-    public String eliminarModelo(@PathVariable Long id) {
+    @PostMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable Long id) {
         modeloRepository.deleteById(id);
         return "redirect:/modelos/lista";
     }

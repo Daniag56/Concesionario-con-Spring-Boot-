@@ -17,50 +17,48 @@ public class ConcesionarioWebController {
     }
 
     @GetMapping("/lista")
-    public String listaConcesionarios(Model model) {
+    public String listar(Model model) {
         model.addAttribute("listaConcesionarios", concesionarioRepository.findAll());
-        return "concesionarios-lista";
+        return "concesionarios/lista";
     }
 
-    @GetMapping("/nuevo")
-    public String nuevoConcesionario(Model model) {
+    @GetMapping({"/crear", "/nuevo"})
+    public String crear(Model model) {
+        model.addAttribute("titulo", "Nuevo Concesionario");
         model.addAttribute("concesionario", new Concesionario());
-        return "concesionario-form";
+        model.addAttribute("accion", "/concesionarios/guardar");
+        return "concesionarios/form";
     }
 
     @PostMapping("/guardar")
-    public String guardarConcesionario(Concesionario concesionario) {
+    public String guardar(Concesionario concesionario) {
         concesionarioRepository.save(concesionario);
         return "redirect:/concesionarios/lista";
     }
 
     @GetMapping("/editar/{id}")
-    public String editarConcesionario(@PathVariable Long id, Model model) {
-        model.addAttribute("concesionario", concesionarioRepository.findById(id).orElse(null));
-        return "concesionario-form";
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Concesionario");
+        model.addAttribute("concesionario", concesionarioRepository.findById(id).orElseThrow());
+        model.addAttribute("accion", "/concesionarios/editar/" + id);
+        return "concesionarios/form";
     }
 
     @PostMapping("/editar/{id}")
     public String guardarEdicion(@PathVariable Long id, Concesionario actualizado) {
-
-        Concesionario c = concesionarioRepository.findById(id).orElse(null);
-
-        if (c != null) {
-            c.setNombreComercial(actualizado.getNombreComercial());
-            c.setCiudad(actualizado.getCiudad());
-            c.setDireccion(actualizado.getDireccion());
-            c.setPlazasExposicion(actualizado.getPlazasExposicion());
-            c.setMetrosCuadrados(actualizado.getMetrosCuadrados());
-            concesionarioRepository.save(c);
-        }
-
+        Concesionario c = concesionarioRepository.findById(id).orElseThrow();
+        c.setNombreComercial(actualizado.getNombreComercial());
+        c.setCiudad(actualizado.getCiudad());
+        c.setDireccion(actualizado.getDireccion());
+        c.setPlazasExposicion(actualizado.getPlazasExposicion());
+        c.setMetrosCuadrados(actualizado.getMetrosCuadrados());
+        concesionarioRepository.save(c);
         return "redirect:/concesionarios/lista";
     }
 
-    @GetMapping("/eliminar/{id}")
-    public String eliminarConcesionario(@PathVariable Long id) {
+    @PostMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable Long id) {
         concesionarioRepository.deleteById(id);
         return "redirect:/concesionarios/lista";
     }
 }
-

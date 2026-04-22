@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/vehiculos")
 public class VehiculoWebController {
@@ -31,114 +33,95 @@ public class VehiculoWebController {
         this.extraRepository = extraRepository;
     }
 
-    // LISTA
     @GetMapping("/lista")
-    public String listaVehiculos(Model model) {
+    public String listar(Model model) {
         model.addAttribute("listaVehiculos", vehiculoRepository.findAll());
-        return "vehiculos-lista";
+        return "vehiculos/lista";
     }
 
-    // NUEVO
-    @GetMapping("/nuevo")
-    public String nuevoVehiculo(Model model) {
+    @GetMapping({"/crear", "/nuevo"})
+    public String crear(Model model) {
+        model.addAttribute("titulo", "Nuevo Vehículo");
         model.addAttribute("vehiculo", new Vehiculo());
         model.addAttribute("modelos", modeloRepository.findAll());
         model.addAttribute("concesionarios", concesionarioRepository.findAll());
         model.addAttribute("extras", extraRepository.findAll());
-        return "vehiculo-form";
+        model.addAttribute("accion", "/vehiculos/guardar");
+        return "vehiculos/form";
     }
 
-    // GUARDAR NUEVO
     @PostMapping("/guardar")
-    public String guardarVehiculo(Vehiculo vehiculo) {
-
-        // Modelo
-        if (vehiculo.getModelo() != null && vehiculo.getModelo().getId() != null) {
-            Modelo modeloReal = modeloRepository.findById(vehiculo.getModelo().getId()).orElse(null);
-            vehiculo.setModelo(modeloReal);
-        }
-
-        // Concesionario
-        if (vehiculo.getConcesionario() != null && vehiculo.getConcesionario().getId() != null) {
-            Concesionario concesionarioReal = concesionarioRepository.findById(vehiculo.getConcesionario().getId()).orElse(null);
-            vehiculo.setConcesionario(concesionarioReal);
-        }
-
-        // Extras (lista)
-        if (vehiculo.getExtras() != null) {
-            vehiculo.setExtras(
-                    vehiculo.getExtras().stream()
-                            .map(e -> extraRepository.findById(e.getId()).orElse(null))
-                            .toList()
-            );
-        }
-
+    public String guardar(Vehiculo vehiculo) {
+        resolverRelaciones(vehiculo);
         vehiculoRepository.save(vehiculo);
         return "redirect:/vehiculos/lista";
     }
 
-    // EDITAR
     @GetMapping("/editar/{id}")
-    public String editarVehiculo(@PathVariable Long id, Model model) {
-        Vehiculo vehiculo = vehiculoRepository.findById(id).orElse(null);
-
-        model.addAttribute("vehiculo", vehiculo);
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Vehículo");
+        model.addAttribute("vehiculo", vehiculoRepository.findById(id).orElseThrow());
         model.addAttribute("modelos", modeloRepository.findAll());
         model.addAttribute("concesionarios", concesionarioRepository.findAll());
         model.addAttribute("extras", extraRepository.findAll());
-
-        return "vehiculo-form";
+        model.addAttribute("accion", "/vehiculos/editar/" + id);
+        return "vehiculos/form";
     }
 
-    // GUARDAR EDICIÓN
     @PostMapping("/editar/{id}")
-    public String guardarEdicion(@PathVariable Long id, Vehiculo vehiculoActualizado) {
+    public String guardarEdicion(@PathVariable Long id, Vehiculo actualizado) {
+        Vehiculo vehiculo = vehiculoRepository.findById(id).orElseThrow();
 
-        Vehiculo vehiculo = vehiculoRepository.findById(id).orElse(null);
+        vehiculo.setCodigoVehiculo(actualizado.getCodigoVehiculo());
+        vehiculo.setVin(actualizado.getVin());
+        vehiculo.setMatricula(actualizado.getMatricula());
+        vehiculo.setFechaFabricacion(actualizado.getFechaFabricacion());
+        vehiculo.setKilometraje(actualizado.getKilometraje());
+        vehiculo.setColor(actualizado.getColor());
+        vehiculo.setPrecioVenta(actualizado.getPrecioVenta());
+        vehiculo.setEstado(actualizado.getEstado());
+        vehiculo.setCombustible(actualizado.getCombustible());
 
-        if (vehiculo != null) {
-
-            vehiculo.setCodigoVehiculo(vehiculoActualizado.getCodigoVehiculo());
-            vehiculo.setVin(vehiculoActualizado.getVin());
-            vehiculo.setMatricula(vehiculoActualizado.getMatricula());
-            vehiculo.setFechaFabricacion(vehiculoActualizado.getFechaFabricacion());
-            vehiculo.setKilometraje(vehiculoActualizado.getKilometraje());
-            vehiculo.setColor(vehiculoActualizado.getColor());
-            vehiculo.setPrecioVenta(vehiculoActualizado.getPrecioVenta());
-            vehiculo.setEstado(vehiculoActualizado.getEstado());
-            vehiculo.setCombustible(vehiculoActualizado.getCombustible());
-
-            // Modelo
-            if (vehiculoActualizado.getModelo() != null && vehiculoActualizado.getModelo().getId() != null) {
-                Modelo modeloReal = modeloRepository.findById(vehiculoActualizado.getModelo().getId()).orElse(null);
-                vehiculo.setModelo(modeloReal);
-            }
-
-            // Concesionario
-            if (vehiculoActualizado.getConcesionario() != null && vehiculoActualizado.getConcesionario().getId() != null) {
-                Concesionario concesionarioReal = concesionarioRepository.findById(vehiculoActualizado.getConcesionario().getId()).orElse(null);
-                vehiculo.setConcesionario(concesionarioReal);
-            }
-
-            // Extras
-            if (vehiculoActualizado.getExtras() != null) {
-                vehiculo.setExtras(
-                        vehiculoActualizado.getExtras().stream()
-                                .map(e -> extraRepository.findById(e.getId()).orElse(null))
-                                .toList()
-                );
-            }
-
-            vehiculoRepository.save(vehiculo);
-        }
-
+        resolverRelacionesEnEdicion(actualizado, vehiculo);
+        vehiculoRepository.save(vehiculo);
         return "redirect:/vehiculos/lista";
     }
 
-    // ELIMINAR
-    @GetMapping("/eliminar/{id}")
-    public String eliminarVehiculo(@PathVariable Long id) {
+    @PostMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable Long id) {
         vehiculoRepository.deleteById(id);
         return "redirect:/vehiculos/lista";
+    }
+
+    // ── helpers ──────────────────────────────────────────────────────────────
+
+    private void resolverRelaciones(Vehiculo v) {
+        if (v.getModelo() != null && v.getModelo().getId() != null) {
+            v.setModelo(modeloRepository.findById(v.getModelo().getId()).orElseThrow());
+        }
+        if (v.getConcesionario() != null && v.getConcesionario().getId() != null) {
+            v.setConcesionario(concesionarioRepository.findById(v.getConcesionario().getId()).orElseThrow());
+        }
+        if (v.getExtras() != null) {
+            List<Extra> extras = v.getExtras().stream()
+                    .map(e -> extraRepository.findById(e.getId()).orElseThrow())
+                    .toList();
+            v.setExtras(extras);
+        }
+    }
+
+    private void resolverRelacionesEnEdicion(Vehiculo origen, Vehiculo destino) {
+        if (origen.getModelo() != null && origen.getModelo().getId() != null) {
+            destino.setModelo(modeloRepository.findById(origen.getModelo().getId()).orElseThrow());
+        }
+        if (origen.getConcesionario() != null && origen.getConcesionario().getId() != null) {
+            destino.setConcesionario(concesionarioRepository.findById(origen.getConcesionario().getId()).orElseThrow());
+        }
+        if (origen.getExtras() != null) {
+            List<Extra> extras = origen.getExtras().stream()
+                    .map(e -> extraRepository.findById(e.getId()).orElseThrow())
+                    .toList();
+            destino.setExtras(extras);
+        }
     }
 }

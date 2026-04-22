@@ -14,13 +14,12 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* CONTENEDOR PRINCIPAL CENTRADO EN TODA LA PÁGINA */
         .page-wrapper {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;   /* CENTRADO VERTICAL */
-            align-items: center;       /* CENTRADO HORIZONTAL */
+            justify-content: center;
+            align-items: center;
             padding-top: 20px;
             padding-bottom: 40px;
         }
@@ -30,15 +29,17 @@
             font-size: 2.2rem;
         }
 
-        /* TARJETAS MÁS GRANDES Y CENTRADAS */
         .card-modern {
             border-radius: 12px;
-            padding: 14px 18px;
+            padding: 18px 24px;
             width: 480px;
             background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(12px);
             box-shadow: 0 4px 14px rgba(0,0,0,0.10);
             transition: 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .card-modern:hover {
@@ -46,50 +47,39 @@
             box-shadow: 0 8px 22px rgba(0,0,0,0.15);
         }
 
-        .value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            min-width: 50px;
-            text-align: right;
-        }
-
-        /* BOTONES OUTLINE PREMIUM */
-        .btn-outline-premium {
-            padding: 4px 10px;
-            font-size: 0.80rem;
-            border-radius: 6px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: 0.2s ease;
-        }
-
-        .btn-outline-premium:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        /* FILA HORIZONTAL */
-        .row-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .left-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .title-center {
-            flex-grow: 1;
-            text-align: center;
+        .card-title {
             font-weight: 600;
             font-size: 1.1rem;
         }
 
-        /* BOTÓN MOSTRAR/OCULTAR */
+        .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .btn-consultar {
+            padding: 8px 18px;
+            font-size: 0.88rem;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            border: 1.5px solid #0d6efd;
+            color: #0d6efd;
+            background: transparent;
+        }
+
+        .btn-consultar:hover {
+            background: #0d6efd;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
         #toggleChart {
             font-weight: 600;
             border-radius: 8px;
@@ -111,94 +101,53 @@
 
     <div class="page-wrapper">
 
-        <h1 class="dashboard-title mb-3">📊 Panel de Control</h1>
+        <h1 class="dashboard-title mb-2">📊 Panel de Control</h1>
         <p class="text-muted mb-4">Resumen general del concesionario</p>
 
         <div class="d-flex flex-wrap gap-4 justify-content-center">
 
             <!-- MARCAS -->
             <div class="card-modern">
-                <div class="row-item">
-                    <div class="left-buttons">
-                        <a href="/marcas/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
-                        <a href="/marcas/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
-                        <a href="/marcas/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
-                    </div>
-
-                    <div class="title-center">Marcas</div>
-
-                    <div id="marcas" class="value">0</div>
-                </div>
+                <div class="card-title">🏷️ Marcas</div>
+                <div id="marcas" class="value">–</div>
+                <a href="/marcas/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
             <!-- MODELOS -->
             <div class="card-modern">
-                <div class="row-item">
-                    <div class="left-buttons">
-                        <a href="/modelos/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
-                        <a href="/modelos/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
-                        <a href="/modelos/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
-                    </div>
-
-                    <div class="title-center">Modelos</div>
-
-                    <div id="modelos" class="value">0</div>
-                </div>
+                <div class="card-title">🚗 Modelos</div>
+                <div id="modelos" class="value">–</div>
+                <a href="/modelos/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
             <!-- CONCESIONARIOS -->
             <div class="card-modern">
-                <div class="row-item">
-                    <div class="left-buttons">
-                        <a href="/concesionarios/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
-                        <a href="/concesionarios/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
-                        <a href="/concesionarios/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
-                    </div>
-
-                    <div class="title-center">Concesionarios</div>
-
-                    <div id="concesionarios" class="value">0</div>
-                </div>
+                <div class="card-title">🏢 Concesionarios</div>
+                <div id="concesionarios" class="value">–</div>
+                <a href="/concesionarios/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
             <!-- EXTRAS -->
             <div class="card-modern">
-                <div class="row-item">
-                    <div class="left-buttons">
-                        <a href="/extras/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
-                        <a href="/extras/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
-                        <a href="/extras/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
-                    </div>
-
-                    <div class="title-center">Extras</div>
-
-                    <div id="extras" class="value">0</div>
-                </div>
+                <div class="card-title">⭐ Extras</div>
+                <div id="extras" class="value">–</div>
+                <a href="/extras/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
             <!-- VEHÍCULOS -->
             <div class="card-modern">
-                <div class="row-item">
-                    <div class="left-buttons">
-                        <a href="/vehiculos/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
-                        <a href="/vehiculos/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
-                        <a href="/vehiculos/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
-                    </div>
-
-                    <div class="title-center">Vehículos</div>
-
-                    <div id="vehiculos" class="value">0</div>
-                </div>
+                <div class="card-title">🚙 Vehículos</div>
+                <div id="vehiculos" class="value">–</div>
+                <a href="/vehiculos/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
         </div>
 
-        <!-- BOTÓN MOSTRAR/OCULTAR -->
         <button id="toggleChart" class="btn btn-outline-dark mt-4 mb-2">
             Ocultar gráfico de contenido
         </button>
 
-        <div class="card-modern p-4" id="chartContainer">
+        <div class="card-modern p-4 d-block" id="chartContainer" style="width:500px;">
             <h4 class="mb-3">Distribución General</h4>
             <canvas id="chartResumen" height="140"></canvas>
         </div>
@@ -211,12 +160,11 @@
         fetch("/api/dashboard/resumen")
             .then(r => r.json())
             .then(data => {
-
-                document.getElementById("marcas").textContent = data.marcas;
-                document.getElementById("modelos").textContent = data.modelos;
-                document.getElementById("concesionarios").textContent = data.concesionarios;
-                document.getElementById("extras").textContent = data.extras;
-                document.getElementById("vehiculos").textContent = data.vehiculos;
+                document.getElementById("marcas").textContent        = data.marcas;
+                document.getElementById("modelos").textContent       = data.modelos;
+                document.getElementById("concesionarios").textContent= data.concesionarios;
+                document.getElementById("extras").textContent        = data.extras;
+                document.getElementById("vehiculos").textContent     = data.vehiculos;
 
                 new Chart(document.getElementById("chartResumen"), {
                     type: "bar",
@@ -224,13 +172,7 @@
                         labels: ["Marcas", "Modelos", "Concesionarios", "Extras", "Vehículos"],
                         datasets: [{
                             label: "Cantidad",
-                            data: [
-                                data.marcas,
-                                data.modelos,
-                                data.concesionarios,
-                                data.extras,
-                                data.vehiculos
-                            ],
+                            data: [data.marcas, data.modelos, data.concesionarios, data.extras, data.vehiculos],
                             backgroundColor: [
                                 "rgba(13,110,253,0.7)",
                                 "rgba(25,135,84,0.7)",
@@ -242,28 +184,24 @@
                         }]
                     },
                     options: {
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
                     }
                 });
             });
 
         const chartContainer = document.getElementById("chartContainer");
         const toggleBtn = document.getElementById("toggleChart");
-
         let visible = true;
 
         toggleBtn.addEventListener("click", () => {
             visible = !visible;
             chartContainer.style.display = visible ? "block" : "none";
-            toggleBtn.textContent = visible ? "Ocultar gráfico de contenido" : "Mostrar gráfico de contenido";
+            toggleBtn.textContent = visible
+                ? "Ocultar gráfico de contenido"
+                : "Mostrar gráfico de contenido";
         });
     </script>
 
 </section>
-
 </html>

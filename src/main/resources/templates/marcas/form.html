@@ -3,152 +3,72 @@
       th:replace="layout :: layout(~{::section})">
 
 <section>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .page-wrapper {
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
+    body, html { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    .page-wrapper { padding: 40px; display: flex; flex-direction: column; align-items: center; }
     .card {
       width: 500px;
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255,255,255,0.78);
       backdrop-filter: blur(12px);
-      padding: 25px;
+      padding: 30px;
       border-radius: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
-
-    h2 {
-      font-weight: 700;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
+    h2 { font-weight: 700; text-align: center; margin-bottom: 24px; }
+    label { font-weight: 600; display: block; margin-bottom: 5px; }
     .form-control {
-      border-radius: 8px;
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
+      border-radius: 8px; padding: 10px 12px; border: 1px solid #ccc;
+      font-size: 1rem; width: 100%; box-sizing: border-box;
+      transition: border-color 0.2s;
     }
-
-    .btn-outline-premium {
-      padding: 8px 14px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      font-weight: 600;
-      display: inline-flex;
-       {
-      transform: translateY(-2px);
-      opacity: 0.9;
+    .form-control:focus { border-color: #0d6efd; outline: none; box-shadow: 0 0 0 3px rgba(13,110,253,0.15); }
+    .btn-accion {
+      padding: 9px 18px; font-size: 0.95rem; border-radius: 8px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: 0.2s ease; text-decoration: none; border: 1.5px solid; cursor: pointer;
+      background: none;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      font-weight: 700;
-    }
+    .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-guardar { border-color: #198754; color: #198754; }
+    .btn-guardar:hover { background: #198754; color: #fff; }
+    .btn-cancelar { border-color: #6c757d; color: #6c757d; }
+    .btn-cancelar:hover { background: #6c757d; color: #fff; }
+    .btn-row { display: flex; justify-content: space-between; margin-top: 24px; }
   </style>
 
   <div class="page-wrapper">
-
-    <!-- SI ES ELIMINAR, MOSTRAR TABLA -->
-    <div th:if="${modo == 'eliminar'}" class="card" style="width:900px;">
-      <h2>Eliminar Marca</h2>
-
-      <table>
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>País</th>
-          <th>Año</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr th:each="m : ${lista}">
-          <td th:text="${m.id}"></td>
-          <td th:text="${m.nombre}"></td>
-          <td th:text="${m.paisOrigen}"></td>
-          <td th:text="${m.anioFundacion}"></td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- FORMULARIO -->
     <div class="card">
 
-      <h2 th:text="${titulo}">Formulario</h2>
+      <h2 th:text="${titulo}">Formulario Marca</h2>
 
       <form th:action="${accion}" th:object="${marca}" method="post">
 
-        <!-- SI NO ES ELIMINAR, MOSTRAR INPUTS -->
-        <div th:if="${modo != 'eliminar'}">
-
-          <div class="mb-3">
-            <label>Nombre</label>
-            <input type="text" th:field="*{nombre}" class="form-control">
-          </div>
-
-          <div class="mb-3">
-            <label>País de Origen</label>
-            <input type="text" th:field="*{paisOrigen}" class="form-control">
-          </div>
-
-          <div class="mb-3">
-            <label>Año de Fundación</label>
-            <input type="number" th:field="*{anioFundacion}" class="form-control">
-          </div>
-
+        <div class="mb-3">
+          <label>Nombre</label>
+          <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Toyota" required>
         </div>
 
-        <!-- SI ES ELIMINAR, SOLO PEDIR ID -->
-        <div th:if="${modo == 'eliminar'}">
-          <label class="fw-bold">ID de la marca a borrar</label>
-          <input type="number" name="id" class="form-control mb-3" required>
+        <div class="mb-3">
+          <label>País de Origen</label>
+          <input type="text" th:field="*{paisOrigen}" class="form-control" placeholder="Ej: Japón">
         </div>
 
-        <button type="submit"
-                class="btn btn-outline-success btn-outline-premium"
-                th:if="${modo != 'eliminar'}">
-          💾 Guardar
-        </button>
+        <div class="mb-3">
+          <label>Año de Fundación</label>
+          <input type="number" th:field="*{anioFundacion}" class="form-control" placeholder="Ej: 1937">
+        </div>
 
-        <button type="submit"
-                class="btn btn-outline-danger btn-outline-premium"
-                th:if="${modo == 'eliminar'}">
-          🗑️ Borrar
-        </button>
-
-        <a href="/marcas/lista" class="btn btn-outline-dark btn-outline-premium">✖ Cancelar</a>
+        <div class="btn-row">
+          <button type="submit" class="btn-accion btn-guardar">💾 Guardar</button>
+          <a href="/marcas/lista" class="btn-accion btn-cancelar">✖ Cancelar</a>
+        </div>
 
       </form>
 
     </div>
-
   </div>
 
 </section>
-
 </html>

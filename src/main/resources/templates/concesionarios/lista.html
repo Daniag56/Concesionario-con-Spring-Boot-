@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout(~{::section})">
+
+<section>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body, html { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        .page-wrapper { padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .table-card {
+            width: 1000px;
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        h2 { font-weight: 700; margin: 0; }
+        .btn-accion {
+            padding: 7px 14px; font-size: 0.85rem; border-radius: 8px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: 0.2s ease; text-decoration: none; border: 1.5px solid;
+        }
+        .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-nuevo  { border-color: #198754; color: #198754; }
+        .btn-nuevo:hover  { background: #198754; color: #fff; }
+        .btn-editar { border-color: #ffc107; color: #856404; }
+        .btn-editar:hover { background: #ffc107; color: #000; }
+        .btn-volver { border-color: #6c757d; color: #6c757d; }
+        .btn-volver:hover { background: #6c757d; color: #fff; }
+        .btn-eliminar {
+            background: none; border: 1.5px solid #dc3545; color: #dc3545;
+            padding: 7px 14px; font-size: 0.85rem; border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-eliminar:hover { background: #dc3545; color: #fff; transform: translateY(-2px); }
+        .form-eliminar { display: inline; margin: 0; padding: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        th { font-weight: 700; background: #f8f9fa; }
+        .acciones { display: flex; gap: 8px; align-items: center; }
+    </style>
+
+    <div class="page-wrapper">
+        <div class="table-card">
+
+            <div class="top-bar">
+                <h2>🏢 Concesionarios</h2>
+                <div style="display:flex; gap:10px;">
+                    <a href="/concesionarios/crear" class="btn-accion btn-nuevo">➕ Nuevo Concesionario</a>
+                    <a href="/dashboard"            class="btn-accion btn-volver">← Dashboard</a>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Comercial</th>
+                    <th>Ciudad</th>
+                    <th>Dirección</th>
+                    <th>Plazas Expo.</th>
+                    <th>m²</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${listaConcesionarios}">
+                    <td th:text="${c.id}"></td>
+                    <td th:text="${c.nombreComercial}"></td>
+                    <td th:text="${c.ciudad}"></td>
+                    <td th:text="${c.direccion}"></td>
+                    <td th:text="${c.plazasExposicion}"></td>
+                    <td th:text="${c.metrosCuadrados}"></td>
+                    <td>
+                        <div class="acciones">
+                            <a th:href="@{'/concesionarios/editar/' + ${c.id}}" class="btn-accion btn-editar">✏️ Editar</a>
+                            <form th:action="@{'/concesionarios/eliminar/' + ${c.id}}" method="post" class="form-eliminar"
+                                  onsubmit="return confirm('¿Eliminar este concesionario?')">
+                                <button type="submit" class="btn-eliminar">🗑️ Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</section>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout(~{::section})">
+
+<section>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* CENTRADO TOTAL */
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* TARJETA PREMIUM */
+    .form-card {
+      width: 480px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      padding: 25px 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      transition: 0.2s ease;
+    }
+
+    .form-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+    }
+
+    .form-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* INPUTS PREMIUM */
+    .form-control {
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 6px rgba(13,110,253,0.4);
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    /* BOTONES OUTLINE PREMIUM */
+    .btn-outline-premium {
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s ease;
+    }
+
+    .btn-outline-premium:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+  </style>
+
+  <div class="page-wrapper">
+
+    <div class="form-card">
+
+      <h2 class="form-title" th:text="${titulo}">Formulario</h2>
+
+      <form th:action="${accion}" th:object="${objeto}" method="post">
+
+        <div th:each="campo : ${campos}" class="mb-3">
+          <label th:text="${campo.label}"></label>
+          <input th:field="*{__${campo.nombre}__}"
+                 th:type="${campo.tipo}"
+                 class="form-control"
+                 th:placeholder="${campo.placeholder}">
+        </div>
+
+        <div class="btn-container">
+          <button type="submit" class="btn btn-outline-success btn-outline-premium">💾 Guardar</button>
+          <a th:href="${volver}" class="btn btn-outline-danger btn-outline-premium">✖ Cancelar</a>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+</html>

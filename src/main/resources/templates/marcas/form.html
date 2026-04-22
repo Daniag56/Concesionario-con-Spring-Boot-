@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout(~{::section})">
+
+<section>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .page-wrapper {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card {
+      width: 500px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn-outline-premium {
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-flex;
+       {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      font-weight: 700;
+    }
+  </style>
+
+  <div class="page-wrapper">
+
+    <!-- SI ES ELIMINAR, MOSTRAR TABLA -->
+    <div th:if="${modo == 'eliminar'}" class="card" style="width:900px;">
+      <h2>Eliminar Marca</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>País</th>
+          <th>Año</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="m : ${lista}">
+          <td th:text="${m.id}"></td>
+          <td th:text="${m.nombre}"></td>
+          <td th:text="${m.paisOrigen}"></td>
+          <td th:text="${m.anioFundacion}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="card">
+
+      <h2 th:text="${titulo}">Formulario</h2>
+
+      <form th:action="${accion}" th:object="${marca}" method="post">
+
+        <!-- SI NO ES ELIMINAR, MOSTRAR INPUTS -->
+        <div th:if="${modo != 'eliminar'}">
+
+          <div class="mb-3">
+            <label>Nombre</label>
+            <input type="text" th:field="*{nombre}" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>País de Origen</label>
+            <input type="text" th:field="*{paisOrigen}" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Año de Fundación</label>
+            <input type="number" th:field="*{anioFundacion}" class="form-control">
+          </div>
+
+        </div>
+
+        <!-- SI ES ELIMINAR, SOLO PEDIR ID -->
+        <div th:if="${modo == 'eliminar'}">
+          <label class="fw-bold">ID de la marca a borrar</label>
+          <input type="number" name="id" class="form-control mb-3" required>
+        </div>
+
+        <button type="submit"
+                class="btn btn-outline-success btn-outline-premium"
+                th:if="${modo != 'eliminar'}">
+          💾 Guardar
+        </button>
+
+        <button type="submit"
+                class="btn btn-outline-danger btn-outline-premium"
+                th:if="${modo == 'eliminar'}">
+          🗑️ Borrar
+        </button>
+
+        <a href="/marcas/lista" class="btn btn-outline-dark btn-outline-premium">✖ Cancelar</a>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+</html>

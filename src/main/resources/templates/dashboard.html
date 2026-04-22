@@ -4,96 +4,203 @@
 
 <section>
 
-    <!-- Fuente moderna -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body, .container, .card-modern, h1, h5, p, .value {
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
             font-family: 'Poppins', sans-serif;
+        }
+
+        /* CONTENEDOR PRINCIPAL CENTRADO EN TODA LA PÁGINA */
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;   /* CENTRADO VERTICAL */
+            align-items: center;       /* CENTRADO HORIZONTAL */
+            padding-top: 20px;
+            padding-bottom: 40px;
         }
 
         .dashboard-title {
             font-weight: 700;
-            font-size: 2.4rem;
+            font-size: 2.2rem;
         }
 
+        /* TARJETAS MÁS GRANDES Y CENTRADAS */
         .card-modern {
-            border-radius: 18px;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.65);
+            border-radius: 12px;
+            padding: 14px 18px;
+            width: 480px;
+            background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(12px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            transition: transform .2s ease, box-shadow .2s ease;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            transition: 0.2s ease;
         }
 
         .card-modern:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.15);
         }
 
         .value {
-            font-size: 2.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-top: 10px;
+            min-width: 50px;
+            text-align: right;
         }
 
-        .icon-big {
-            font-size: 3.2rem;
+        /* BOTONES OUTLINE PREMIUM */
+        .btn-outline-premium {
+            padding: 4px 10px;
+            font-size: 0.80rem;
+            border-radius: 6px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s ease;
+        }
+
+        .btn-outline-premium:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* FILA HORIZONTAL */
+        .row-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .left-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .title-center {
+            flex-grow: 1;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* BOTÓN MOSTRAR/OCULTAR */
+        #toggleChart {
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: 0.2s ease;
+        }
+
+        #toggleChart:hover {
+            transform: translateY(-2px);
+        }
+
+        #chartContainer {
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
         }
     </style>
 
-    <div class="container">
+    <div class="page-wrapper">
 
-        <h1 class="dashboard-title mb-4">📊 Panel de Control</h1>
-        <p class="text-muted mb-5">Resumen general del concesionario</p>
+        <h1 class="dashboard-title mb-3">📊 Panel de Control</h1>
+        <p class="text-muted mb-4">Resumen general del concesionario</p>
 
-        <div class="row g-4">
+        <div class="d-flex flex-wrap gap-4 justify-content-center">
 
-            <div class="col-md-4">
-                <div class="card-modern text-center">
-                    <i class="bi bi-building icon-big text-primary"></i>
-                    <h5 class="mt-3">Marcas</h5>
+            <!-- MARCAS -->
+            <div class="card-modern">
+                <div class="row-item">
+                    <div class="left-buttons">
+                        <a href="/marcas/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
+                        <a href="/marcas/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
+                        <a href="/marcas/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
+                    </div>
+
+                    <div class="title-center">Marcas</div>
+
                     <div id="marcas" class="value">0</div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card-modern text-center">
-                    <i class="bi bi-car-front icon-big text-success"></i>
-                    <h5 class="mt-3">Modelos</h5>
+            <!-- MODELOS -->
+            <div class="card-modern">
+                <div class="row-item">
+                    <div class="left-buttons">
+                        <a href="/modelos/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
+                        <a href="/modelos/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
+                        <a href="/modelos/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
+                    </div>
+
+                    <div class="title-center">Modelos</div>
+
                     <div id="modelos" class="value">0</div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card-modern text-center">
-                    <i class="bi bi-shop icon-big text-warning"></i>
-                    <h5 class="mt-3">Concesionarios</h5>
+            <!-- CONCESIONARIOS -->
+            <div class="card-modern">
+                <div class="row-item">
+                    <div class="left-buttons">
+                        <a href="/concesionarios/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
+                        <a href="/concesionarios/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
+                        <a href="/concesionarios/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
+                    </div>
+
+                    <div class="title-center">Concesionarios</div>
+
                     <div id="concesionarios" class="value">0</div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card-modern text-center">
-                    <i class="bi bi-tools icon-big text-danger"></i>
-                    <h5 class="mt-3">Extras</h5>
+            <!-- EXTRAS -->
+            <div class="card-modern">
+                <div class="row-item">
+                    <div class="left-buttons">
+                        <a href="/extras/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
+                        <a href="/extras/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
+                        <a href="/extras/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
+                    </div>
+
+                    <div class="title-center">Extras</div>
+
                     <div id="extras" class="value">0</div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card-modern text-center">
-                    <i class="bi bi-truck-front icon-big text-info"></i>
-                    <h5 class="mt-3">Vehículos</h5>
+            <!-- VEHÍCULOS -->
+            <div class="card-modern">
+                <div class="row-item">
+                    <div class="left-buttons">
+                        <a href="/vehiculos/crear" class="btn btn-outline-success btn-outline-premium">➕</a>
+                        <a href="/vehiculos/lista" class="btn btn-outline-warning btn-outline-premium">✏️</a>
+                        <a href="/vehiculos/lista" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
+                    </div>
+
+                    <div class="title-center">Vehículos</div>
+
                     <div id="vehiculos" class="value">0</div>
                 </div>
             </div>
 
         </div>
 
-        <div class="card-modern mt-5 p-4">
+        <!-- BOTÓN MOSTRAR/OCULTAR -->
+        <button id="toggleChart" class="btn btn-outline-dark mt-4 mb-2">
+            Ocultar gráfico de contenido
+        </button>
+
+        <div class="card-modern p-4" id="chartContainer">
             <h4 class="mb-3">Distribución General</h4>
-            <canvas id="chartResumen" height="120"></canvas>
+            <canvas id="chartResumen" height="140"></canvas>
         </div>
 
     </div>
@@ -144,10 +251,19 @@
                     }
                 });
             });
+
+        const chartContainer = document.getElementById("chartContainer");
+        const toggleBtn = document.getElementById("toggleChart");
+
+        let visible = true;
+
+        toggleBtn.addEventListener("click", () => {
+            visible = !visible;
+            chartContainer.style.display = visible ? "block" : "none";
+            toggleBtn.textContent = visible ? "Ocultar gráfico de contenido" : "Mostrar gráfico de contenido";
+        });
     </script>
 
 </section>
 
 </html>
-
-

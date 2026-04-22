@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout(~{::section})">
+
+<section>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .page-wrapper {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .table-card {
+      width: 900px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .btn-outline-premium {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s ease;
+    }
+
+    .btn-outline-premium:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      font-weight: 700;
+    }
+
+    .acciones {
+      display: flex;
+      gap: 8px;
+    }
+  </style>
+
+  <div class="page-wrapper">
+
+    <div class="table-card">
+
+      <h2>Marcas</h2>
+
+      <a href="/marcas/crear" class="btn btn-outline-success btn-outline-premium">➕ Nueva Marca</a>
+
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>País</th>
+          <th>Año</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="m : ${lista}">
+          <td th:text="${m.id}"></td>
+          <td th:text="${m.nombre}"></td>
+          <td th:text="${m.paisOrigen}"></td>
+          <td th:text="${m.anioFundacion}"></td>
+
+          <td>
+            <div class="acciones">
+              <a th:href="@{'/marcas/editar/' + ${m.id}}" class="btn btn-outline-warning btn-outline-premium">✏️</a>
+              <a th:href="@{'/marcas/eliminar/' + ${m.id}}" class="btn btn-outline-danger btn-outline-premium">🗑️</a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+</html>

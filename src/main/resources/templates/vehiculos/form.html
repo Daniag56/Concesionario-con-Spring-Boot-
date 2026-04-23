@@ -67,26 +67,31 @@
 
                 <p class="section-label">Clasificación</p>
                 <div class="grid2">
+
                     <div class="mb-3">
                         <label>Modelo</label>
-                        <select th:field="*{modelo.id}" class="form-control">
+                        <select name="modelo.id" class="form-control">
                             <option value="">-- Selecciona --</option>
-                            <option th:each="mod  ${modelos}"
-                                    th:value="${mod.id}"
-                                    th:text="${mod.nombre}">
+                            <option th:each="modelo : ${modelos}"
+                                    th:value="${modelo.id}"
+                                    th:text="${modelo.nombre}"
+                                    th:selected="${vehiculo.modelo != null and vehiculo.modelo.id == mod.id}">
                             </option>
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label>Concesionario</label>
-                        <select th:field="*{concesionario.id}" class="form-control">
+                        <select name="concesionario.id" class="form-control">
                             <option value="">-- Selecciona --</option>
                             <option th:each="con : ${concesionarios}"
                                     th:value="${con.id}"
-                                    th:text="${con.nombreComercial}">
+                                    th:text="${con.nombreComercial}"
+                                    th:selected="${vehiculo.concesionario != null and vehiculo.concesionario.id == con.id}">
                             </option>
                         </select>
                     </div>
+
                 </div>
 
                 <div class="grid2">
@@ -143,8 +148,8 @@
                             <input type="checkbox"
                                    name="extras"
                                    th:value="${e.id}"
-                                   th:checked="${vehiculo.extras != null and vehiculo.extras.contains(e)}">
-                            <span th:text="${e.nombre + ' (+' + e.precioAdicional + '€)'}"></span>
+                                   th:checked="${vehiculo.extras != null and #lists.contains(vehiculo.extras, e)}">
+                            <span th:text="${e.nombre + ' (+ ' + e.precioAdicional + ' €)'}"></span>
                         </label>
                     </div>
                 </div>

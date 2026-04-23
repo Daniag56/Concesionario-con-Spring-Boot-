@@ -11,17 +11,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, SessionAuthenticationFilter sessionFilter) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
-                )
+
+                .addFilterBefore(sessionFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
+
+                .formLogin(form -> form.disable())
                 .logout(logout -> logout.logoutUrl("/logout"));
 
         return http.build();
@@ -32,3 +32,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+

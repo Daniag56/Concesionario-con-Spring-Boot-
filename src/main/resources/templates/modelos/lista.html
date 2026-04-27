@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout :: layout(~{::section})">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modelos</title>
+</head>
+
+<body th:replace="layout :: layout(~{::section})">
 
 <section>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -36,7 +41,7 @@
             cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
         }
         .btn-eliminar:hover { background: #dc3545; color: #fff; transform: translateY(-2px); }
-        .form-eliminar { display: inline; margin: 0; padding: 0; }
+        .form-eliminar { display: inline-block; margin: 0; padding: 0; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px; border-bottom: 1px solid #ddd; }
         th { font-weight: 700; background: #f8f9fa; }
@@ -50,7 +55,7 @@
                 <h2>🚗 Modelos</h2>
                 <div style="display:flex; gap:10px;">
                     <a href="/modelos/crear" class="btn-accion btn-nuevo">➕ Nuevo Modelo</a>
-                    <a href="/dashboard"     class="btn-accion btn-volver">← Dashboard</a>
+                    <a href="/dashboard" class="btn-accion btn-volver">← Dashboard</a>
                 </div>
             </div>
 
@@ -79,7 +84,9 @@
                     <td>
                         <div class="acciones">
                             <a th:href="@{'/modelos/editar/' + ${m.id}}" class="btn-accion btn-editar">✏️ Editar</a>
-                            <form th:action="@{'/modelos/eliminar/' + ${m.id}}" method="post" class="form-eliminar"
+                            <form th:action="@{'/modelos/eliminar/' + ${m.id}}"
+                                  method="post"
+                                  class="form-eliminar"
                                   onsubmit="return confirm('¿Eliminar este modelo?')">
                                 <button type="submit" class="btn-eliminar">🗑️ Eliminar</button>
                             </form>
@@ -93,4 +100,6 @@
     </div>
 
 </section>
+
+</body>
 </html>

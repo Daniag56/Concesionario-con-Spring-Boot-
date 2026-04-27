@@ -1,5 +1,6 @@
 package com.example.concesionario.security;
 
+import com.example.concesionario.entity.Usuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,8 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.example.concesionario.entity.Usuario;
 
 import java.io.IOException;
 
@@ -31,7 +30,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(
                             usuario,
                             null,
-                            null
+                            usuario.getAuthorities() // 
                     );
 
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -42,3 +41,4 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout :: layout(~{::section})">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo}">Formulario Modelo</title>
+</head>
+
+<body>
+
+<!-- APLICAR LAYOUT CORRECTAMENTE -->
+<div th:replace="layout :: layout(~{::section})"></div>
 
 <section>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -90,4 +98,6 @@
     </div>
 
 </section>
+
+</body>
 </html>

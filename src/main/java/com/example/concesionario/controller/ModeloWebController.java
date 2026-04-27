@@ -26,7 +26,7 @@ public class ModeloWebController {
         return "modelos/lista";
     }
 
-    @GetMapping({"/crear", "/nuevo"})
+    @GetMapping("/crear")
     public String crear(Model model) {
         model.addAttribute("titulo", "Nuevo Modelo");
         model.addAttribute("modelo", new Modelo());

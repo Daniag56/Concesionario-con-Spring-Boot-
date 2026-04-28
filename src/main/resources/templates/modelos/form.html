@@ -1,16 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${titulo}">Formulario Modelo</title>
-</head>
-
-<body>
-
-<!-- APLICAR LAYOUT CORRECTAMENTE -->
-<div th:replace="layout :: layout(~{::section})"></div>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout(~{::section})">
 
 <section>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -58,7 +51,7 @@
 
                 <div class="mb-3">
                     <label>Marca</label>
-                    <select th:field="*{marca.id}" class="form-control">
+                    <select name="marca.id" class="form-control">
                         <option value="">-- Selecciona una marca --</option>
                         <option th:each="marca : ${marcas}"
                                 th:value="${marca.id}"
@@ -98,6 +91,3 @@
     </div>
 
 </section>
-
-</body>
-</html>

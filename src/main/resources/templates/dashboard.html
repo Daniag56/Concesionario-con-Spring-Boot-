@@ -29,17 +29,28 @@
             font-size: 2.2rem;
         }
 
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1100px;
+        }
+
         .card-modern {
+            width: 200px;
+            min-height: 160px;
             border-radius: 12px;
-            padding: 18px 24px;
-            width: 480px;
+            padding: 20px;
             background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(12px);
             box-shadow: 0 4px 14px rgba(0,0,0,0.10);
             transition: 0.2s ease;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
+            align-items: center;
+            text-align: center;
         }
 
         .card-modern:hover {
@@ -49,29 +60,29 @@
 
         .card-title {
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            margin: 0;
+            line-height: 1.2;
         }
 
         .value {
-            font-size: 1.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            min-width: 50px;
-            text-align: center;
+            line-height: 1;
+            margin: 10px 0;
         }
 
         .btn-consultar {
-            padding: 8px 18px;
-            font-size: 0.88rem;
+            padding: 8px 14px;
+            font-size: 0.8rem;
             border-radius: 8px;
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
             transition: 0.2s ease;
             text-decoration: none;
             border: 1.5px solid #0d6efd;
             color: #0d6efd;
             background: transparent;
+            white-space: nowrap;
         }
 
         .btn-consultar:hover {
@@ -104,7 +115,7 @@
         <h1 class="dashboard-title mb-2">📊 Panel de Control</h1>
         <p class="text-muted mb-4">Resumen general del concesionario</p>
 
-        <div class="d-flex flex-wrap gap-4 justify-content-center">
+        <div class="cards-container">
 
             <!-- MARCAS -->
             <div class="card-modern">

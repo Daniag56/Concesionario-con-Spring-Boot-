@@ -75,7 +75,7 @@
 
                 <div class="mb-3">
                     <label>Modelo</label>
-                    <select th:field="*{modelo.id}" class="form-control">
+                    <select name="modelo.id" class="form-control">
                         <option value="">-- Selecciona --</option>
                         <option th:each="modelo : ${modelos}"
                                 th:value="${modelo.id}"
@@ -86,7 +86,7 @@
 
                 <div class="mb-3">
                     <label>Concesionario</label>
-                    <select th:field="*{concesionario.id}" class="form-control">
+                    <select name="concesionario.id" class="form-control">
                         <option value="">-- Selecciona --</option>
                         <option th:each="con : ${concesionarios}"
                                 th:value="${con.id}"

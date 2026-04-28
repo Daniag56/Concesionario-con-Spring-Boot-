@@ -2,11 +2,16 @@ package com.example.concesionario.controller;
 
 import com.example.concesionario.entity.Modelo;
 import com.example.concesionario.entity.Marca;
+import com.example.concesionario.entity.Vehiculo;
 import com.example.concesionario.repository.ModeloRepository;
 import com.example.concesionario.repository.MarcaRepository;
+import com.example.concesionario.repository.VehiculoRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/modelos")
@@ -14,10 +19,12 @@ public class ModeloWebController {
 
     private final ModeloRepository modeloRepository;
     private final MarcaRepository marcaRepository;
+    private final VehiculoRepository vehiculoRepository;
 
-    public ModeloWebController(ModeloRepository modeloRepository, MarcaRepository marcaRepository) {
+    public ModeloWebController(ModeloRepository modeloRepository, MarcaRepository marcaRepository, VehiculoRepository vehiculoRepository) {
         this.modeloRepository = modeloRepository;
         this.marcaRepository = marcaRepository;
+        this.vehiculoRepository = vehiculoRepository;
     }
 
     @GetMapping("/lista")
@@ -70,8 +77,18 @@ public class ModeloWebController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
-        modeloRepository.deleteById(id);
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            List<Vehiculo> vehiculos = vehiculoRepository.findByModeloId(id);
+            if (!vehiculos.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "No se puede eliminar el modelo porque tiene vehículos asociados.");
+                return "redirect:/modelos/lista";
+            }
+            modeloRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Modelo eliminado correctamente.");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error", "No se puede eliminar este registro porque está siendo usado por otros datos.");
+        }
         return "redirect:/modelos/lista";
     }
 }

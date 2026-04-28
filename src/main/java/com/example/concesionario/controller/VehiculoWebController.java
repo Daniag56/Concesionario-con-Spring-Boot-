@@ -12,6 +12,9 @@ import com.example.concesionario.repository.VehiculoRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class VehiculoWebController {
 
         Vehiculo vehiculo = new Vehiculo();
 
-        // Inicializar modelo y marca para evitar null en el formulario
+
         Modelo modelo = new Modelo();
         modelo.setMarca(new Marca());
         vehiculo.setModelo(modelo);
@@ -63,20 +66,28 @@ public class VehiculoWebController {
         poblarSelectores(model);
 
         return "vehiculos/form";
-    }
+}
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Vehiculo vehiculo, Model model) {
+    public String guardar(@ModelAttribute Vehiculo vehiculo,
+                      @RequestParam(value = "modelo.id", required = false) Long modeloId,
+                      @RequestParam(value = "concesionario.id", required = false) Long concId,
+                      Model model) {
 
-        // 🔥 DEBUG PARA VER QUÉ LLEGA DEL FORMULARIO
-        System.out.println("DEBUG VEHICULO POST:");
-        System.out.println("Modelo ID: " + (vehiculo.getModelo() != null ? vehiculo.getModelo().getId() : "null"));
-        System.out.println("Marca ID: " + (vehiculo.getModelo() != null && vehiculo.getModelo().getMarca() != null ? vehiculo.getModelo().getMarca().getId() : "null"));
-        System.out.println("Concesionario ID: " + (vehiculo.getConcesionario() != null ? vehiculo.getConcesionario().getId() : "null"));
-        System.out.println("Extras: " + (vehiculo.getExtras() != null ? vehiculo.getExtras().size() : "null"));
+        System.out.println("=== DEBUG VEHICULO POST ===");
+        System.out.println("modeloId from @RequestParam: " + modeloId);
+        System.out.println("concesionarioId from @RequestParam: " + concId);
+        System.out.println("codigoVehiculo: " + vehiculo.getCodigoVehiculo());
+        System.out.println("===========================");
+
+        if (modeloId != null) {
+            modeloRepository.findById(modeloId).ifPresent(vehiculo::setModelo);
+        }
+        if (concId != null) {
+            concesionarioRepository.findById(concId).ifPresent(vehiculo::setConcesionario);
+        }
 
         try {
-            resolverRelaciones(vehiculo);
             vehiculoRepository.save(vehiculo);
             return "redirect:/vehiculos/lista";
         } catch (Exception ex) {
@@ -90,13 +101,11 @@ public class VehiculoWebController {
     }
 
 
-    // ── EDITAR ───────────────────────────────────────────────────────────────
-
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         Vehiculo vehiculo = vehiculoRepository.findById(id).orElseThrow();
 
-        // Asegurar que modelo y marca no sean null
+
         if (vehiculo.getModelo() == null) {
             Modelo m = new Modelo();
             m.setMarca(new Marca());
@@ -144,24 +153,25 @@ public class VehiculoWebController {
         }
     }
 
-    // ── ELIMINAR ─────────────────────────────────────────────────────────────
+
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
-
-        Vehiculo vehiculo = vehiculoRepository.findById(id).orElseThrow();
-        Modelo modelo = vehiculo.getModelo();
-
-        vehiculoRepository.delete(vehiculo);
-
-        if (modelo != null) {
-            modeloRepository.delete(modelo);
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Vehiculo vehiculo = vehiculoRepository.findById(id).orElseThrow();
+            Modelo modelo = vehiculo.getModelo();
+            vehiculoRepository.delete(vehiculo);
+            if (modelo != null) {
+                modeloRepository.delete(modelo);
+            }
+            redirectAttributes.addFlashAttribute("success", "Vehículo eliminado correctamente.");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error", "No se puede eliminar este vehículo.");
         }
-
         return "redirect:/vehiculos/lista";
     }
 
-    // ── HELPERS ──────────────────────────────────────────────────────────────
+
 
     private void poblarSelectores(Model model) {
         model.addAttribute("modelos", modeloRepository.findAll());
@@ -172,24 +182,19 @@ public class VehiculoWebController {
 
     private void resolverRelaciones(Vehiculo v) {
 
-        // Marca seleccionada
-        Long marcaId = v.getModelo().getMarca().getId();
-        Marca marca = marcaRepository.findById(marcaId).orElseThrow();
 
-        // Modelo nuevo
-        Modelo modelo = v.getModelo();
-        modelo.setMarca(marca);
+        if (v.getModelo() != null && v.getModelo().getId() != null) {
+            Long modeloId = v.getModelo().getId();
+            Modelo modelo = modeloRepository.findById(modeloId).orElseThrow();
+            v.setModelo(modelo);
+        }
 
-        modeloRepository.save(modelo);
 
-        v.setModelo(modelo);
-
-        // Concesionario
         if (v.getConcesionario() != null && v.getConcesionario().getId() != null) {
             v.setConcesionario(concesionarioRepository.findById(v.getConcesionario().getId()).orElseThrow());
         }
 
-        // Extras
+
         if (v.getExtras() != null && !v.getExtras().isEmpty()) {
             List<Extra> extras = v.getExtras().stream()
                     .map(e -> extraRepository.findById(e.getId()).orElseThrow())
@@ -200,22 +205,19 @@ public class VehiculoWebController {
 
     private void resolverRelacionesEnEdicion(Vehiculo origen, Vehiculo destino) {
 
-        // Marca
-        Long marcaId = origen.getModelo().getMarca().getId();
-        Marca marca = marcaRepository.findById(marcaId).orElseThrow();
 
-        Modelo modelo = origen.getModelo();
-        modelo.setMarca(marca);
+        if (origen.getModelo() != null && origen.getModelo().getId() != null) {
+            Long modeloId = origen.getModelo().getId();
+            Modelo modelo = modeloRepository.findById(modeloId).orElseThrow();
+            destino.setModelo(modelo);
+        }
 
-        modeloRepository.save(modelo);
-        destino.setModelo(modelo);
 
-        // Concesionario
         if (origen.getConcesionario() != null && origen.getConcesionario().getId() != null) {
             destino.setConcesionario(concesionarioRepository.findById(origen.getConcesionario().getId()).orElseThrow());
         }
 
-        // Extras
+
         if (origen.getExtras() != null && !origen.getExtras().isEmpty()) {
             List<Extra> extras = origen.getExtras().stream()
                     .map(e -> extraRepository.findById(e.getId()).orElseThrow())

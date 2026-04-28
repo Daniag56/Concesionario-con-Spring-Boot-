@@ -3,6 +3,7 @@ package com.example.concesionario.repository;
 import com.example.concesionario.entity.EstadoVehiculo;
 import com.example.concesionario.entity.Vehiculo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -24,7 +25,10 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
     List<Vehiculo> findByModeloId(@Param("modeloId") Long modeloId);
 
     @RestResource(path = "por-concesionario", rel = "por-concesionario")
-    List<Vehiculo> findByConcesionarioId(@Param("concesionarioId") Long concesionarioId);
+    List<Vehiculo> findByConcesionarioId(@Param("concesionarioId") Long concedionarioId);
+
+    @Query("SELECT v FROM Vehiculo v JOIN v.extras e WHERE e.id = :extraId")
+    List<Vehiculo> findByExtrasId(@Param("extraId") Long extraId);
 }
 
 

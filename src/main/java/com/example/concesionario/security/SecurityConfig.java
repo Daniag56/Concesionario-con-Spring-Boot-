@@ -30,6 +30,9 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/error/403")
+                )
                 .authorizeHttpRequests(auth -> auth
 
 

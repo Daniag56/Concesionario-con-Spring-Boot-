@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.security.core.Authentication;
 
 @Controller
 public class AuthController {
@@ -46,6 +48,13 @@ public class AuthController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
+    }
+
+
+    @GetMapping("/debug/role")
+    @ResponseBody
+    public Object debugRole(Authentication auth) {
+        return auth == null ? "NO AUTH" : auth.getAuthorities();
     }
 }
 

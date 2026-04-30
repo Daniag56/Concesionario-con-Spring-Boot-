@@ -8,7 +8,6 @@
 
     <style>
         body, html {
-            height: 100%;
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
@@ -18,10 +17,11 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding-top: 20px;
-            padding-bottom: 40px;
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .dashboard-title {
@@ -34,11 +34,14 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            width: 100%;
             max-width: 1100px;
+            margin: 0 auto;
         }
 
         .card-modern {
             width: 200px;
+            max-width: 100%;
             min-height: 160px;
             border-radius: 12px;
             padding: 20px;
@@ -51,6 +54,27 @@
             justify-content: space-between;
             align-items: center;
             text-align: center;
+            flex: 1 1 200px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 992px) {
+            .card-modern { min-height: 140px; padding: 15px; flex: 1 1 180px; }
+            .value { font-size: 1.8rem; }
+        }
+
+        @media (max-width: 768px) {
+            .cards-container { gap: 15px; }
+            .card-modern { min-height: 130px; padding: 12px; flex: 1 1 45%; }
+            .card-title { font-size: 0.9rem; }
+            .value { font-size: 1.6rem; }
+            .btn-consultar { padding: 6px 10px; font-size: 0.75rem; }
+        }
+
+        @media (max-width: 576px) {
+            .cards-container { gap: 10px; }
+            .card-modern { width: 100%; max-width: 280px; min-height: 120px; padding: 15px; flex: 1 1 100%; }
+            .dashboard-title { font-size: 1.6rem; }
         }
 
         .card-modern:hover {
@@ -107,6 +131,10 @@
             background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(12px);
             box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .user-header-bar {
@@ -115,6 +143,9 @@
             display: flex;
             justify-content: flex-end;
             margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
         }
 
         .user-info {
@@ -170,6 +201,10 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        @media (max-width: 576px) {
+            .user-email { max-width: 100px; }
         }
 
         .user-menu-btn {
@@ -322,7 +357,7 @@
             Ocultar gráfico de contenido
         </button>
 
-        <div class="card-modern p-4 d-block" id="chartContainer" style="width:500px;">
+        <div class="card-modern p-4 d-block" id="chartContainer" style="width: 100%; max-width: 500px;">
             <h4 class="mb-3">Distribución General</h4>
             <canvas id="chartResumen" height="140"></canvas>
         </div>

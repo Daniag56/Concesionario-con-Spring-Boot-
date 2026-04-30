@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout :: layout(~{::section})">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::section})">
 <section>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -108,24 +105,18 @@
             background: transparent;
             white-space: nowrap;
         }
-
         .btn-consultar:hover {
-            background: #0d6efd;
-            color: #fff;
-            transform: translateY(-2px);
+            background: #0d6efd; color: #fff; transform: translateY(-2px);
         }
-
         #toggleChart {
             font-weight: 600;
             border-radius: 8px;
             padding: 10px 20px;
             transition: 0.2s ease;
         }
-
         #toggleChart:hover {
             transform: translateY(-2px);
         }
-
         #chartContainer {
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.78);
@@ -180,112 +171,44 @@
             font-size: 1rem;
         }
 
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .user-label {
-            font-size: 0.7rem;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .user-email {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #212529;
-            max-width: 150px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .user-details { display: flex; flex-direction: column; line-height: 1.2; }
+        .user-label { font-size: 0.7rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
+        .user-email { font-size: 0.9rem; font-weight: 600; color: #212529; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         @media (max-width: 576px) {
             .user-email { max-width: 100px; }
         }
 
-        .user-menu-btn {
-            background: none;
-            border: none;
-            color: #6c757d;
-            padding: 4px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+        .user-bar {
+            position: relative;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 12px;
+            border-radius: 999px;
         }
 
-        .user-info.show-dropdown .user-menu-btn {
-            transform: rotate(180deg);
-        }
-
-        .user-dropdown {
+        .user-bar-dropdown {
             position: absolute;
-            top: 100%;
-            right: 0;
+            top: 100%; right: 0;
             margin-top: 8px;
             min-width: 180px;
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255,255,255,0.98);
             backdrop-filter: blur(20px);
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 0;
             list-style: none;
-            padding: 8px 0;
-            margin: 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
             z-index: 1000;
+            display: none;
         }
 
-        .user-info.show-dropdown .user-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+        .user-info.show-dropdown .user-bar-dropdown { display: block; }
 
-        .dropdown-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            color: #495057;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-link:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-            color: #667eea;
-        }
-
-        .dropdown-line {
-            margin: 4px 0;
-            border: none;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .logout-link {
-            color: #dc3545;
-        }
-
-        .logout-link:hover {
-            background: rgba(220, 53, 69, 0.08);
-            color: #dc3545;
-        }
+        .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #495057; text-decoration: none; }
+        .dropdown-item:hover { background: rgba(0,0,0,0.05); color: #0d6efd; }
 
         @media (max-width: 576px) {
-            .user-email {
-                display: none;
-            }
-            .user-details {
-                display: none;
-            }
-            .user-info {
-                padding: 8px 12px;
-            }
+            .user-email { display: none; }
         }
     </style>
 
@@ -293,9 +216,7 @@
 
         <div class="user-header-bar" th:if="${session['usuario'] != null}">
             <div class="user-info">
-                <div class="user-avatar">
-                    <i class="bi bi-person-fill"></i>
-                </div>
+                <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
                 <div class="user-details">
                     <span class="user-label">Conectado como</span>
                     <span class="user-email" th:text="${session['usuario'].email}">Usuario</span>
@@ -303,10 +224,10 @@
                 <button class="user-menu-btn" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-chevron-down"></i>
                 </button>
-                <ul class="user-dropdown">
-                    <li><a class="dropdown-link" href="#"><i class="bi bi-person"></i> Mi cuenta</a></li>
-                    <li><hr class="dropdown-line"></li>
-                    <li><a class="dropdown-link logout-link" th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+                <ul class="user-dropdown user-bar-dropdown" aria-label="Usuario">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Mi cuenta</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -315,47 +236,38 @@
         <p class="text-muted mb-4">Resumen general del concesionario</p>
 
         <div class="cards-container">
-
-            <!-- MARCAS -->
             <div class="card-modern">
                 <div class="card-title">🏷️ Marcas</div>
                 <div id="marcas" class="value">–</div>
                 <a href="/marcas/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
-            <!-- MODELOS -->
             <div class="card-modern">
                 <div class="card-title">🚗 Modelos</div>
                 <div id="modelos" class="value">–</div>
                 <a href="/modelos/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
-            <!-- CONCESIONARIOS -->
             <div class="card-modern">
                 <div class="card-title">🏢 Concesionarios</div>
                 <div id="concesionarios" class="value">–</div>
                 <a href="/concesionarios/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
-            <!-- EXTRAS -->
             <div class="card-modern">
                 <div class="card-title">⭐ Extras</div>
                 <div id="extras" class="value">–</div>
                 <a href="/extras/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
 
-            <!-- VEHÍCULOS -->
             <div class="card-modern">
                 <div class="card-title">🚙 Vehículos</div>
                 <div id="vehiculos" class="value">–</div>
                 <a href="/vehiculos/lista" class="btn-consultar">🔍 Consultar tabla</a>
             </div>
-
         </div>
 
-        <button id="toggleChart" class="btn btn-outline-dark mt-4 mb-2">
-            Ocultar gráfico de contenido
-        </button>
+        <button id="toggleChart" class="btn btn-outline-dark mt-4 mb-2">Ocultar gráfico de contenido</button>
 
         <div class="card-modern p-4 d-block" id="chartContainer" style="width: 100%; max-width: 500px;">
             <h4 class="mb-3">Distribución General</h4>
@@ -379,16 +291,12 @@
                 new Chart(document.getElementById("chartResumen"), {
                     type: "bar",
                     data: {
-                        labels: ["Marcas", "Modelos", "Concesionarios", "Extras", "Vehículos"],
+                        labels: ["Marcas","Modelos","Concesionarios","Extras","Vehículos"],
                         datasets: [{
                             label: "Cantidad",
                             data: [data.marcas, data.modelos, data.concesionarios, data.extras, data.vehiculos],
                             backgroundColor: [
-                                "rgba(13,110,253,0.7)",
-                                "rgba(25,135,84,0.7)",
-                                "rgba(255,193,7,0.7)",
-                                "rgba(220,53,69,0.7)",
-                                "rgba(13,202,240,0.7)"
+                                "rgba(13,110,253,0.7)", "rgba(25,135,84,0.7)", "rgba(255,193,7,0.7)", "rgba(220,53,69,0.7)", "rgba(13,202,240,0.7)"
                             ],
                             borderRadius: 10
                         }]

@@ -30,7 +30,7 @@
       padding: 7px 12px; font-size: 0.85rem; border-radius: 8px; font-weight: 600;
       display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
       border: 1.5px solid; background: none; cursor: pointer; transition: 0.2s ease;
-      white-space: nowrap;
+      white-space: nowrap; min-width: 132px; height: 40px; justify-content: center; box-sizing: border-box;
     }
     .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
     .btn-detalle { border-color: #0d6efd; color: #0d6efd; }
@@ -39,7 +39,7 @@
     .btn-eliminar:hover { background: #dc3545; color: #fff; }
     .btn-volver { border-color: #6c757d; color: #6c757d; }
     .btn-volver:hover { background: #6c757d; color: #fff; }
-    .acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+    .acciones { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .empty-card { text-align: center; color: #6c757d; padding: 28px 14px; }
     @media (max-width: 576px) {
       .page-wrapper { padding: 10px; }
@@ -88,9 +88,7 @@
           <td data-label="Acciones">
             <div class="acciones">
               <a class="btn-accion btn-detalle" th:href="@{'/cliente/vehiculo/' + ${item.vehiculo.id}}">🔎 Detalle</a>
-              <form th:action="@{'/cliente/carrito/eliminar/' + ${item.id}}" method="post">
-                <button type="submit" class="btn-accion btn-eliminar">🗑️ Eliminar</button>
-              </form>
+              <a class="btn-accion btn-eliminar" th:href="@{'/cliente/carrito/eliminar/' + ${item.id}}">🗑️ Eliminar</a>
             </div>
           </td>
         </tr>

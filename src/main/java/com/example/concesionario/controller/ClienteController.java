@@ -84,8 +84,27 @@ public class ClienteController {
     public String eliminarDelCarrito(@PathVariable Long itemId,
                                      Authentication authentication,
                                      RedirectAttributes redirectAttributes) {
+        return eliminarItemCarrito(itemId, authentication, redirectAttributes);
+    }
+
+    @GetMapping("/carrito/eliminar/{itemId}")
+    public String eliminarDelCarritoGet(@PathVariable Long itemId,
+                                        Authentication authentication,
+                                        RedirectAttributes redirectAttributes) {
+        return eliminarItemCarrito(itemId, authentication, redirectAttributes);
+    }
+
+    private String eliminarItemCarrito(Long itemId,
+                                       Authentication authentication,
+                                       RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) authentication.getPrincipal();
-        carritoItemRepository.deleteByIdAndUsuarioId(itemId, usuario.getId());
+        var itemOpt = carritoItemRepository.findByIdAndUsuarioId(itemId, usuario.getId());
+        if (itemOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró el elemento en tu carrito.");
+            return "redirect:/cliente/carrito";
+        }
+
+        carritoItemRepository.deleteById(itemOpt.get().getId());
         redirectAttributes.addFlashAttribute("success", "Elemento eliminado de MiCarrito.");
         return "redirect:/cliente/carrito";
     }

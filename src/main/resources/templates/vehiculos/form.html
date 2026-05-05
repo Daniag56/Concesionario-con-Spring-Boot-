@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -24,6 +21,9 @@
             .page-wrapper { padding: 20px 15px; }
             .card { padding: 20px; }
             h2 { font-size: 1.4rem; }
+            .grid2 { grid-template-columns: 1fr; }
+            .btn-row { flex-direction: column; }
+            .btn-accion { width: 100%; justify-content: center; }
         }
         .form-control {
             border-radius: 8px; padding: 10px 12px; border: 1px solid #ccc;
@@ -41,7 +41,7 @@
         .btn-guardar:hover { background: #198754; color: #fff; }
         .btn-cancelar { border-color: #6c757d; color: #6c757d; }
         .btn-cancelar:hover { background: #6c757d; color: #fff; }
-        .btn-row { display: flex; justify-content: space-between; margin-top: 24px; }
+        .btn-row { display: flex; justify-content: space-between; margin-top: 24px; gap: 10px; flex-wrap: wrap; }
         .section-label {
             font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
             letter-spacing: 0.06em; color: #6c757d; margin: 20px 0 10px;
@@ -169,4 +169,4 @@
     </div>
 
 </section>
-</html>
+</div>

@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" 
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -73,11 +70,11 @@
         </thead>
         <tbody>
         <tr th:each="e : ${listaExtras}">
-          <td th:text="${e.id}"></td>
-          <td th:text="${e.nombre}"></td>
-          <td th:text="${e.descripcion}"></td>
-          <td th:text="${e.precioAdicional}"></td>
-          <td>
+          <td data-label="ID" th:text="${e.id}"></td>
+          <td data-label="Nombre" th:text="${e.nombre}"></td>
+          <td data-label="Descripción" th:text="${e.descripcion}"></td>
+          <td data-label="Precio Adicional (€)" th:text="${e.precioAdicional}"></td>
+          <td data-label="Acciones">
             <div class="acciones">
               <a th:href="@{'/extras/editar/' + ${e.id}}" class="btn-accion btn-editar">✏️ Editar</a>
               <form th:action="@{'/extras/eliminar/' + ${e.id}}" method="post" class="form-eliminar"
@@ -94,4 +91,4 @@
   </div>
 
 </section>
-</html>
+</div>

@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -26,7 +24,11 @@
     .btn-outline-success:hover { background: #198754; color: #fff; }
     .btn-outline-danger { border-color: #dc3545; color: #dc3545; background: transparent; }
     .btn-outline-danger:hover { background: #dc3545; color: #fff; }
-    .btn-row { display: flex; justify-content: space-between; margin-top: 20px; }
+    .btn-row { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; flex-wrap: wrap; }
+    @media (max-width: 576px) {
+      .btn-row { flex-direction: column; }
+      .btn-accion { width: 100%; justify-content: center; }
+    }
   </style>
 
   <div class="page-wrapper">
@@ -49,5 +51,4 @@
   </div>
   
 </section>
-
-</html>
+</div>

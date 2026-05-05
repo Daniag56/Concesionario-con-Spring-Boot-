@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -46,7 +43,7 @@
         .btn-guardar:hover { background: #198754; color: #fff; }
         .btn-cancelar { border-color: #6c757d; color: #6c757d; }
         .btn-cancelar:hover { background: #6c757d; color: #fff; }
-        .btn-row { display: flex; justify-content: space-between; margin-top: 24px; }
+        .btn-row { display: flex; justify-content: space-between; margin-top: 24px; gap: 10px; flex-wrap: wrap; }
     </style>
 
     <div class="page-wrapper">
@@ -103,4 +100,4 @@
     </div>
 
 </section>
-</html>
+</div>

@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" 
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -70,14 +67,14 @@
         </thead>
         <tbody>
         <tr th:each="m : ${listaModelos}">
-          <td th:text="${m.id}"></td>
-          <td th:text="${m.nombre}"></td>
-          <td th:text="${m.marca != null ? m.marca.nombre : '–'}"></td>
-          <td th:text="${m.anioLanzamiento}"></td>
-          <td th:text="${m.numeroPlazas}"></td>
-          <td th:text="${m.tipoCarroceria}"></td>
-          <td th:text="${m.potenciaCv}"></td>
-          <td>
+          <td data-label="ID" th:text="${m.id}"></td>
+          <td data-label="Nombre" th:text="${m.nombre}"></td>
+          <td data-label="Marca" th:text="${m.marca != null ? m.marca.nombre : '–'}"></td>
+          <td data-label="Año Lanz." th:text="${m.anioLanzamiento}"></td>
+          <td data-label="Plazas" th:text="${m.numeroPlazas}"></td>
+          <td data-label="Carrocería" th:text="${m.tipoCarroceria}"></td>
+          <td data-label="CV" th:text="${m.potenciaCv}"></td>
+          <td data-label="Acciones">
             <div class="acciones">
               <a th:href="@{'/modelos/editar/' + ${m.id}}" class="btn-accion btn-editar">✏️ Editar</a>
             </div>
@@ -89,4 +86,4 @@
   </div>
 
 </section>
-</html>
+</div>

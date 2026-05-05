@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" 
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -75,13 +72,13 @@
         </thead>
         <tbody>
         <tr th:each="c : ${listaConcesionarios}">
-          <td th:text="${c.id}"></td>
-          <td th:text="${c.nombreComercial}"></td>
-          <td th:text="${c.ciudad}"></td>
-          <td th:text="${c.direccion}"></td>
-          <td th:text="${c.plazasExposicion}"></td>
-          <td th:text="${c.metrosCuadrados}"></td>
-          <td>
+          <td data-label="ID" th:text="${c.id}"></td>
+          <td data-label="Nombre Comercial" th:text="${c.nombreComercial}"></td>
+          <td data-label="Ciudad" th:text="${c.ciudad}"></td>
+          <td data-label="Dirección" th:text="${c.direccion}"></td>
+          <td data-label="Plazas Expo." th:text="${c.plazasExposicion}"></td>
+          <td data-label="m²" th:text="${c.metrosCuadrados}"></td>
+          <td data-label="Acciones">
             <div class="acciones">
               <a th:href="@{'/concesionarios/editar/' + ${c.id}}" class="btn-accion btn-editar">✏️ Editar</a>
               <form th:action="@{'/concesionarios/eliminar/' + ${c.id}}" method="post" class="form-eliminar"
@@ -98,4 +95,4 @@
   </div>
 
 </section>
-</html>
+</div>

@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" 
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -77,23 +74,23 @@
         </thead>
         <tbody>
         <tr th:each="v : ${listaVehiculos}">
-          <td th:text="${v.id}"></td>
-          <td th:text="${v.codigoVehiculo}"></td>
-          <td th:text="${v.vin}"></td>
-          <td th:text="${v.matricula}"></td>
-          <td th:text="${v.modelo != null ? v.modelo.nombre : '–'}"></td>
-          <td th:text="${v.concesionario != null ? v.concesionario.nombreComercial : '–'}"></td>
-          <td>
+          <td data-label="ID" th:text="${v.id}"></td>
+          <td data-label="Código" th:text="${v.codigoVehiculo}"></td>
+          <td data-label="VIN" th:text="${v.vin}"></td>
+          <td data-label="Matrícula" th:text="${v.matricula}"></td>
+          <td data-label="Modelo" th:text="${v.modelo != null ? v.modelo.nombre : '–'}"></td>
+          <td data-label="Concesionario" th:text="${v.concesionario != null ? v.concesionario.nombreComercial : '–'}"></td>
+          <td data-label="Estado">
             <span th:text="${v.estado}"
                   th:classappend="${v.estado != null and v.estado.name() == 'NUEVO'} ? 'badge badge-nuevo' :
                                   (${v.estado != null and v.estado.name() == 'KM0'}  ? 'badge badge-km0'  :
                                   'badge badge-usado')">
             </span>
           </td>
-          <td th:text="${v.combustible}"></td>
-          <td th:text="${v.kilometraje}"></td>
-          <td th:text="${v.precioVenta}"></td>
-          <td>
+          <td data-label="Combustible" th:text="${v.combustible}"></td>
+          <td data-label="Km" th:text="${v.kilometraje}"></td>
+          <td data-label="Precio (€)" th:text="${v.precioVenta}"></td>
+          <td data-label="Acciones">
             <div class="acciones">
               <a th:href="@{'/vehiculos/editar/' + ${v.id}}" class="btn-accion btn-editar">✏️ Editar</a>
               <form th:action="@{'/vehiculos/eliminar/' + ${v.id}}" method="post" class="form-eliminar"
@@ -110,4 +107,4 @@
   </div>
 
 </section>
-</html>
+</div>

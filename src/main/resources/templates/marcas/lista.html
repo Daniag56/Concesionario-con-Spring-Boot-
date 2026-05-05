@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" 
-      th:replace="layout :: layout(~{::section})">
-
+<div th:replace="layout :: layout(~{::section})">
 <section>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -76,11 +73,11 @@
         </thead>
         <tbody>
         <tr th:each="m : ${marcas}">
-          <td th:text="${m.id}"></td>
-          <td th:text="${m.nombre}"></td>
-          <td th:text="${m.paisOrigen}"></td>
-          <td th:text="${m.anioFundacion}"></td>
-          <td>
+          <td data-label="ID" th:text="${m.id}"></td>
+          <td data-label="Nombre" th:text="${m.nombre}"></td>
+          <td data-label="País de Origen" th:text="${m.paisOrigen}"></td>
+          <td data-label="Año Fundación" th:text="${m.anioFundacion}"></td>
+          <td data-label="Acciones">
             <div class="acciones">
               <a th:href="@{'/marcas/editar/' + ${m.id}}" class="btn-accion btn-editar">✏️ Editar</a>
               <form th:action="@{'/marcas/eliminar/' + ${m.id}}" method="post" class="form-eliminar" onsubmit="return confirm('¿Eliminar esta marca?')">
@@ -95,4 +92,4 @@
   </div>
 
 </section>
-</html>
+</div>

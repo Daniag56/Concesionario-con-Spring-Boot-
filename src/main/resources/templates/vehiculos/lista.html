@@ -4,7 +4,7 @@
 
   <style>
     .page-wrapper { padding: 40px; display: flex; flex-direction: column; align-items: center; max-width: 100%; margin: 0 auto; box-sizing: border-box; }
-  .table-card { width: 100%; max-width: 1100px; background: rgba(255,255,255,0.78); backdrop-filter: blur(12px); padding: 25px; border-radius: 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+  .table-card { width: 100%; max-width: 1100px; background: rgba(255,255,255,0.78); backdrop-filter: blur(12px); padding: 25px; border-radius: 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); overflow-x: auto; }
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     h2 { font-weight: 700; margin: 0; }
 
@@ -24,9 +24,11 @@
       .page-wrapper { padding: 15px 10px; }
       table, thead, tbody, th, td, tr { display: block; }
       thead { display: none; }
+      table { min-width: 100%; }
       tr { margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
       td { padding: 8px; border: none; }
       td::before { content: attr(data-label); font-weight: 600; display: block; color: #666; font-size: 0.75rem; text-transform: uppercase; }
+      .acciones { justify-content: flex-start; }
     }
     .btn-accion { padding: 7px 14px; font-size: 0.85rem; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s ease; text-decoration: none; border: 1.5px solid; }
     .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
@@ -39,10 +41,14 @@
     .btn-eliminar { background: none; border: 1.5px solid #dc3545; color: #dc3545; padding: 7px 14px; font-size: 0.85rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }
     .btn-eliminar:hover { background: #dc3545; color: #fff; transform: translateY(-2px); }
     .form-eliminar { display: inline; margin: 0; padding: 0; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table { width: 100%; min-width: 1020px; border-collapse: collapse; margin-top: 10px; }
     th, td { padding: 12px; border-bottom: 1px solid #ddd; }
     th { font-weight: 700; background: #f8f9fa; }
-    .acciones { display: flex; gap: 8px; align-items: center; }
+    .acciones { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    .btn-accion, .btn-eliminar { white-space: nowrap; }
+    @media (max-width: 1200px) {
+      .acciones { justify-content: flex-start; }
+    }
   </style>
 
   <div class="page-wrapper">

@@ -1,0 +1,106 @@
+<div th:replace="layout :: layout(~{::section})">
+<section>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .page-wrapper { max-width: 1200px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+    .table-card {
+      width: 100%;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(12px);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      padding: 22px;
+      overflow-x: auto;
+    }
+    .header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .title { font-weight: 700; margin: 0; }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    th, td { padding: 11px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+    th { background: #f8f9fa; font-weight: 700; }
+    .total-row { margin-top: 16px; display: flex; justify-content: flex-end; }
+    .total-box {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .btn-accion {
+      padding: 7px 12px; font-size: 0.85rem; border-radius: 8px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+      border: 1.5px solid; background: none; cursor: pointer; transition: 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-detalle { border-color: #0d6efd; color: #0d6efd; }
+    .btn-detalle:hover { background: #0d6efd; color: #fff; }
+    .btn-eliminar { border-color: #dc3545; color: #dc3545; }
+    .btn-eliminar:hover { background: #dc3545; color: #fff; }
+    .btn-volver { border-color: #6c757d; color: #6c757d; }
+    .btn-volver:hover { background: #6c757d; color: #fff; }
+    .acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+    .empty-card { text-align: center; color: #6c757d; padding: 28px 14px; }
+    @media (max-width: 576px) {
+      .page-wrapper { padding: 10px; }
+      table, thead, tbody, th, td, tr { display: block; min-width: 100%; }
+      thead { display: none; }
+      tr { margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
+      td { border: none; padding: 8px; }
+      td::before { content: attr(data-label); display: block; font-weight: 600; font-size: 0.75rem; color: #666; text-transform: uppercase; }
+      .acciones { justify-content: flex-start; }
+      .btn-accion { width: 100%; justify-content: center; }
+      .total-row { justify-content: stretch; }
+      .total-box { width: 100%; text-align: center; }
+    }
+  </style>
+
+  <div class="page-wrapper">
+    <div class="table-card">
+      <div class="header-row">
+        <h2 class="title">🛒 MiCarrito</h2>
+        <a class="btn-accion btn-volver" th:href="@{/cliente/catalogo}">← Seguir viendo vehiculos</a>
+      </div>
+
+      <div th:if="${#lists.isEmpty(items)}" class="empty-card">
+        Tu carrito esta vacio.
+      </div>
+
+      <table th:if="${!#lists.isEmpty(items)}">
+        <thead>
+        <tr>
+          <th>Vehiculo</th>
+          <th>Concesionario</th>
+          <th>Extras</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+          <td data-label="Vehiculo" th:text="${(item.vehiculo.modelo != null ? item.vehiculo.modelo.nombre : 'Vehiculo') + ' - ' + (item.vehiculo.matricula != null ? item.vehiculo.matricula : 'Sin matricula')}"></td>
+          <td data-label="Concesionario" th:text="${item.vehiculo.concesionario != null ? item.vehiculo.concesionario.nombreComercial : 'N/D'}"></td>
+          <td data-label="Extras">
+            <span th:if="${item.vehiculo.extras == null or #lists.isEmpty(item.vehiculo.extras)}">Sin extras</span>
+            <span th:if="${item.vehiculo.extras != null and !#lists.isEmpty(item.vehiculo.extras)}" th:text="${#lists.size(item.vehiculo.extras) + ' extras'}"></span>
+          </td>
+          <td data-label="Precio" th:text="${item.vehiculo.precioVenta != null ? #numbers.formatDecimal(item.vehiculo.precioVenta, 1, 2) + ' EUR' : 'N/D'}"></td>
+          <td data-label="Acciones">
+            <div class="acciones">
+              <a class="btn-accion btn-detalle" th:href="@{'/cliente/vehiculo/' + ${item.vehiculo.id}}">🔎 Detalle</a>
+              <form th:action="@{'/cliente/carrito/eliminar/' + ${item.id}}" method="post">
+                <button type="submit" class="btn-accion btn-eliminar">🗑️ Eliminar</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="total-row" th:if="${!#lists.isEmpty(items)}">
+        <div class="total-box" th:text="${'Total: ' + #numbers.formatDecimal(total, 1, 2) + ' EUR'}">Total</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>

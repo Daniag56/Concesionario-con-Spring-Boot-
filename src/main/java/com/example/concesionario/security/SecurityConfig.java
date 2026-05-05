@@ -40,14 +40,19 @@ public class SecurityConfig {
 
 
                         .requestMatchers("/dashboard").hasRole("ADMIN")
+                        .requestMatchers("/api/dashboard/**").hasRole("ADMIN")
+
+                        .requestMatchers("/marcas/**", "/modelos/**", "/concesionarios/**", "/extras/**").hasRole("ADMIN")
 
 
                         .requestMatchers("/vehiculos/crear").hasRole("ADMIN")
                         .requestMatchers("/vehiculos/editar/**").hasRole("ADMIN")
                         .requestMatchers("/vehiculos/eliminar/**").hasRole("ADMIN")
+                        .requestMatchers("/vehiculos/guardar").hasRole("ADMIN")
 
+                        .requestMatchers("/vehiculos/lista").hasRole("ADMIN")
 
-                        .requestMatchers("/vehiculos/lista").authenticated()
+                        .requestMatchers("/cliente/**").hasRole("CLIENTE")
 
 
                         .anyRequest().authenticated()

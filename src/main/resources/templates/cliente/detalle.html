@@ -1,0 +1,76 @@
+<div th:replace="layout :: layout(~{::section})">
+<section>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+    .detail-card {
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(12px);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      padding: 24px;
+    }
+    .title { font-weight: 700; margin-bottom: 4px; }
+    .subtitle { color: #6c757d; margin-bottom: 20px; }
+    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .detail-item { background: rgba(248,249,250,0.85); border-radius: 10px; padding: 12px; }
+    .label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: #6c757d; margin-bottom: 3px; }
+    .value { font-weight: 600; color: #212529; }
+    .extras-box { margin-top: 18px; }
+    .extras-list { margin: 0; padding-left: 18px; color: #495057; }
+    .total { margin-top: 16px; font-size: 1.8rem; font-weight: 700; }
+    .btn-row { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-accion {
+      padding: 9px 16px; font-size: 0.9rem; border-radius: 8px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+      border: 1.5px solid; background: none; cursor: pointer; transition: 0.2s ease;
+    }
+    .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-outline-primary { border-color: #0d6efd; color: #0d6efd; }
+    .btn-outline-primary:hover { background: #0d6efd; color: #fff; }
+    .btn-outline-success { border-color: #198754; color: #198754; }
+    .btn-outline-success:hover { background: #198754; color: #fff; }
+    @media (max-width: 768px) {
+      .details-grid { grid-template-columns: 1fr; }
+      .page-wrapper { padding: 10px; }
+      .btn-row { flex-direction: column; }
+      .btn-accion { width: 100%; justify-content: center; }
+    }
+  </style>
+
+  <div class="page-wrapper">
+    <div class="detail-card">
+      <h1 class="title" th:text="${(vehiculo.modelo != null ? vehiculo.modelo.nombre : 'Vehiculo') + ' ' + (vehiculo.matricula != null ? '(' + vehiculo.matricula + ')' : '')}">Vehiculo</h1>
+      <p class="subtitle">Ficha completa del vehiculo seleccionado</p>
+
+      <div class="details-grid">
+        <div class="detail-item"><div class="label">Codigo</div><div class="value" th:text="${vehiculo.codigoVehiculo}"></div></div>
+        <div class="detail-item"><div class="label">VIN</div><div class="value" th:text="${vehiculo.vin}"></div></div>
+        <div class="detail-item"><div class="label">Concesionario</div><div class="value" th:text="${vehiculo.concesionario != null ? vehiculo.concesionario.nombreComercial : 'N/D'}"></div></div>
+        <div class="detail-item"><div class="label">Ciudad</div><div class="value" th:text="${vehiculo.concesionario != null ? vehiculo.concesionario.ciudad : 'N/D'}"></div></div>
+        <div class="detail-item"><div class="label">Estado</div><div class="value" th:text="${vehiculo.estado}"></div></div>
+        <div class="detail-item"><div class="label">Combustible</div><div class="value" th:text="${vehiculo.combustible}"></div></div>
+        <div class="detail-item"><div class="label">Kilometraje</div><div class="value" th:text="${vehiculo.kilometraje != null ? vehiculo.kilometraje + ' km' : 'N/D'}"></div></div>
+        <div class="detail-item"><div class="label">Precio</div><div class="value" th:text="${vehiculo.precioVenta != null ? #numbers.formatDecimal(vehiculo.precioVenta, 1, 2) + ' EUR' : 'N/D'}"></div></div>
+      </div>
+
+      <div class="extras-box">
+        <div class="label">Extras incluidos</div>
+        <ul class="extras-list" th:if="${vehiculo.extras != null and !#lists.isEmpty(vehiculo.extras)}">
+          <li th:each="e : ${vehiculo.extras}" th:text="${e.nombre + ' (+' + (e.precioAdicional != null ? #numbers.formatDecimal(e.precioAdicional, 1, 2) : '0.00') + ' EUR)'}"></li>
+        </ul>
+        <p class="value" th:if="${vehiculo.extras == null or #lists.isEmpty(vehiculo.extras)}">Sin extras</p>
+      </div>
+
+      <div class="total" th:text="${vehiculo.precioVenta != null ? #numbers.formatDecimal(vehiculo.precioVenta, 1, 2) + ' EUR' : 'N/D'}">0 EUR</div>
+
+      <div class="btn-row">
+        <a class="btn-accion btn-outline-primary" th:href="@{/cliente/catalogo}">← Volver al catalogo</a>
+        <form th:action="@{'/cliente/carrito/agregar/' + ${vehiculo.id}}" method="post">
+          <button type="submit" class="btn-accion btn-outline-success">🛒 Anadir a MiCarrito</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+</div>

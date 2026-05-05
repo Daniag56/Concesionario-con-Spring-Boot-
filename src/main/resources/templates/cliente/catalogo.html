@@ -1,0 +1,75 @@
+<div th:replace="layout :: layout(~{::section})">
+<section>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .page-wrapper { padding: 20px; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .title { font-weight: 700; font-size: 2rem; margin: 0; }
+    .subtitle { color: #6c757d; margin: 0; }
+    .vehiculos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .vehiculo-card {
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(12px);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: 0.2s ease;
+    }
+    .vehiculo-card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,0.16); }
+    .vehiculo-title { font-size: 1.1rem; font-weight: 700; margin: 0; }
+    .vehiculo-meta { color: #495057; font-size: 0.9rem; margin: 0; }
+    .vehiculo-price { font-weight: 700; font-size: 1.5rem; margin: 4px 0; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
+    .btn-accion {
+      padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+      border: 1.5px solid; background: none; transition: 0.2s ease; cursor: pointer;
+    }
+    .btn-accion:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-detalle { border-color: #0d6efd; color: #0d6efd; }
+    .btn-detalle:hover { background: #0d6efd; color: #fff; }
+    .btn-carrito { border-color: #198754; color: #198754; }
+    .btn-carrito:hover { background: #198754; color: #fff; }
+    .empty-card { text-align: center; padding: 35px 20px; color: #6c757d; }
+    @media (max-width: 576px) {
+      .page-wrapper { padding: 10px; }
+      .title { font-size: 1.6rem; }
+      .btn-row { flex-direction: column; }
+      .btn-accion { width: 100%; justify-content: center; }
+    }
+  </style>
+
+  <div class="page-wrapper">
+    <div class="header-row">
+      <div>
+        <h1 class="title">Catalogo de Vehiculos</h1>
+        <p class="subtitle">Explora vehiculos disponibles y agregalos a MiCarrito</p>
+      </div>
+      <a class="btn-accion btn-detalle" th:href="@{/cliente/carrito}">🛒 Ver MiCarrito</a>
+    </div>
+
+    <div class="vehiculos-grid" th:if="${!#lists.isEmpty(vehiculos)}">
+      <div class="vehiculo-card" th:each="v : ${vehiculos}">
+        <h3 class="vehiculo-title" th:text="${(v.modelo != null ? v.modelo.nombre : 'Vehiculo') + ' - ' + (v.matricula != null ? v.matricula : 'Sin matricula')}">Modelo</h3>
+        <p class="vehiculo-meta" th:text="${'VIN: ' + v.vin}">VIN</p>
+        <p class="vehiculo-meta" th:text="${'Concesionario: ' + (v.concesionario != null ? v.concesionario.nombreComercial : 'N/D')}">Concesionario</p>
+        <p class="vehiculo-meta" th:text="${'Estado: ' + v.estado + ' | Combustible: ' + v.combustible}">Estado</p>
+        <div class="vehiculo-price" th:text="${v.precioVenta != null ? #numbers.formatDecimal(v.precioVenta, 1, 2) + ' EUR' : 'N/D'}">0 EUR</div>
+        <div class="btn-row">
+          <a class="btn-accion btn-detalle" th:href="@{'/cliente/vehiculo/' + ${v.id}}">🔎 Ver detalle</a>
+          <form th:action="@{'/cliente/carrito/agregar/' + ${v.id}}" method="post">
+            <button type="submit" class="btn-accion btn-carrito">➕ Anadir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="vehiculo-card empty-card" th:if="${#lists.isEmpty(vehiculos)}">
+      No hay vehiculos disponibles en este momento.
+    </div>
+  </div>
+</section>
+</div>

@@ -36,6 +36,10 @@ public class AuthController {
             session.setAttribute("usuario", user);
             session.setAttribute("role", user.getRole());
 
+            if ("CLIENTE".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/cliente/catalogo";
+            }
+
             return "redirect:/dashboard";
 
         } catch (Exception e) {

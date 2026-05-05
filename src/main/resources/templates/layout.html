@@ -27,19 +27,25 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/dashboard}">Concesionario</a>
+        <a class="navbar-brand" th:href="${session['role'] == 'CLIENTE'} ? @{/cliente/catalogo} : @{/dashboard}">Concesionario</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="menu">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto" th:if="${session['role'] == 'ADMIN'}">
                 <li class="nav-item"><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/marcas/lista}">Marcas</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/modelos/lista}">Modelos</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/concesionarios/lista}">Concesionarios</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/extras/lista}">Extras</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/vehiculos/lista}">Vehículos</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Salir</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto" th:if="${session['role'] == 'CLIENTE'}">
+                <li class="nav-item"><a class="nav-link" th:href="@{/cliente/catalogo}">Catálogo</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/cliente/carrito}">MiCarrito</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Salir</a></li>
             </ul>
         </div>
     </div>

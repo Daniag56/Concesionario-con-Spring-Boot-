@@ -35,6 +35,9 @@ public class Vehiculo {
     @Size(max = 50)
     private String color;
 
+    @Column(length = 600)
+    private String fotoUrl;
+
     private Double precioVenta;
 
     @Enumerated(EnumType.STRING)
@@ -111,6 +114,14 @@ public class Vehiculo {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 
     public Double getPrecioVenta() {

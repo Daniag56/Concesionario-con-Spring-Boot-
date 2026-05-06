@@ -10,6 +10,15 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
       padding: 24px;
     }
+    .foto-box { margin-bottom: 18px; }
+    .vehiculo-foto {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
     .title { font-weight: 700; margin-bottom: 4px; }
     .subtitle { color: #6c757d; margin-bottom: 20px; }
     .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -41,6 +50,9 @@
 
   <div class="page-wrapper">
     <div class="detail-card">
+      <div class="foto-box" th:if="${vehiculo.fotoUrl != null and !#strings.isEmpty(vehiculo.fotoUrl)}">
+        <img th:src="${vehiculo.fotoUrl}" alt="Foto vehículo" class="vehiculo-foto">
+      </div>
       <h1 class="title" th:text="${(vehiculo.modelo != null ? vehiculo.modelo.nombre : 'Vehiculo') + ' ' + (vehiculo.matricula != null ? '(' + vehiculo.matricula + ')' : '')}">Vehiculo</h1>
       <p class="subtitle">Ficha completa del vehiculo seleccionado</p>
 
@@ -52,7 +64,7 @@
         <div class="detail-item"><div class="label">Estado</div><div class="value" th:text="${vehiculo.estado}"></div></div>
         <div class="detail-item"><div class="label">Combustible</div><div class="value" th:text="${vehiculo.combustible}"></div></div>
         <div class="detail-item"><div class="label">Kilometraje</div><div class="value" th:text="${vehiculo.kilometraje != null ? vehiculo.kilometraje + ' km' : 'N/D'}"></div></div>
-        <div class="detail-item"><div class="label">Precio</div><div class="value" th:text="${vehiculo.precioVenta != null ? #numbers.formatDecimal(vehiculo.precioVenta, 1, 2) + ' EUR' : 'N/D'}"></div></div>
+        <div class="detail-item"><div class="label">Precio</div><div class="value" th:text="${#numbers.formatDecimal(precioFinal, 1, 2) + ' EUR'}"></div></div>
       </div>
 
       <div class="extras-box">
@@ -63,7 +75,7 @@
         <p class="value" th:if="${vehiculo.extras == null or #lists.isEmpty(vehiculo.extras)}">Sin extras</p>
       </div>
 
-      <div class="total" th:text="${vehiculo.precioVenta != null ? #numbers.formatDecimal(vehiculo.precioVenta, 1, 2) + ' EUR' : 'N/D'}">0 EUR</div>
+      <div class="total" th:text="${#numbers.formatDecimal(precioFinal, 1, 2) + ' EUR'}">0 EUR</div>
 
       <div class="btn-row">
         <a class="btn-accion btn-outline-primary" th:href="@{/cliente/catalogo}">← Volver al catalogo</a>

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/cliente")
@@ -30,8 +32,14 @@ public class ClienteController {
 
     @GetMapping("/catalogo")
     public String catalogo(Model model) {
+        List<Vehiculo> vehiculos = vehiculoRepository.findAll();
+        Map<Long, Double> preciosFinales = new HashMap<>();
+        for (Vehiculo v : vehiculos) {
+            preciosFinales.put(v.getId(), calcularPrecioConExtras(v));
+        }
         model.addAttribute("titulo", "Catálogo de Vehículos");
-        model.addAttribute("vehiculos", vehiculoRepository.findAll());
+        model.addAttribute("vehiculos", vehiculos);
+        model.addAttribute("preciosFinales", preciosFinales);
         return "cliente/catalogo";
     }
 
@@ -40,6 +48,7 @@ public class ClienteController {
         Vehiculo vehiculo = vehiculoRepository.findById(id).orElseThrow();
         model.addAttribute("titulo", "Detalle de Vehículo");
         model.addAttribute("vehiculo", vehiculo);
+        model.addAttribute("precioFinal", calcularPrecioConExtras(vehiculo));
         return "cliente/detalle";
     }
 
@@ -69,13 +78,17 @@ public class ClienteController {
     public String verCarrito(Authentication authentication, Model model) {
         Usuario usuario = (Usuario) authentication.getPrincipal();
         List<CarritoItem> items = carritoItemRepository.findByUsuarioIdOrderByCreatedAtDesc(usuario.getId());
-        double total = items.stream()
-                .map(CarritoItem::getVehiculo)
-                .mapToDouble(v -> v.getPrecioVenta() == null ? 0.0 : v.getPrecioVenta())
-                .sum();
+        Map<Long, Double> preciosPorItem = new HashMap<>();
+        double total = 0.0;
+        for (CarritoItem item : items) {
+            double precioFinal = calcularPrecioConExtras(item.getVehiculo());
+            preciosPorItem.put(item.getId(), precioFinal);
+            total += precioFinal;
+        }
 
         model.addAttribute("titulo", "MiCarrito");
         model.addAttribute("items", items);
+        model.addAttribute("preciosPorItem", preciosPorItem);
         model.addAttribute("total", total);
         return "cliente/carrito";
     }
@@ -107,5 +120,13 @@ public class ClienteController {
         carritoItemRepository.deleteById(itemOpt.get().getId());
         redirectAttributes.addFlashAttribute("success", "Elemento eliminado de MiCarrito.");
         return "redirect:/cliente/carrito";
+    }
+
+    private double calcularPrecioConExtras(Vehiculo vehiculo) {
+        double base = vehiculo.getPrecioVenta() == null ? 0.0 : vehiculo.getPrecioVenta();
+        double totalExtras = vehiculo.getExtras() == null ? 0.0 : vehiculo.getExtras().stream()
+                .mapToDouble(e -> e.getPrecioAdicional() == null ? 0.0 : e.getPrecioAdicional())
+                .sum();
+        return base + totalExtras;
     }
 }

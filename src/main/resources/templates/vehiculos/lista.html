@@ -46,6 +46,14 @@
     th { font-weight: 700; background: #f8f9fa; }
     .acciones { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
     .btn-accion, .btn-eliminar { white-space: nowrap; }
+    .thumb {
+      width: 70px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
     @media (max-width: 1200px) {
       .acciones { justify-content: flex-start; }
     }
@@ -67,6 +75,7 @@
         <tr>
           <th>ID</th>
           <th>Código</th>
+          <th>Foto</th>
           <th>VIN</th>
           <th>Matrícula</th>
           <th>Modelo</th>
@@ -82,6 +91,10 @@
         <tr th:each="v : ${listaVehiculos}">
           <td data-label="ID" th:text="${v.id}"></td>
           <td data-label="Código" th:text="${v.codigoVehiculo}"></td>
+          <td data-label="Foto">
+            <img th:if="${v.fotoUrl != null and !#strings.isEmpty(v.fotoUrl)}" th:src="${v.fotoUrl}" alt="Foto" class="thumb">
+            <span th:if="${v.fotoUrl == null or #strings.isEmpty(v.fotoUrl)}">—</span>
+          </td>
           <td data-label="VIN" th:text="${v.vin}"></td>
           <td data-label="Matrícula" th:text="${v.matricula}"></td>
           <td data-label="Modelo" th:text="${v.modelo != null ? v.modelo.nombre : '–'}"></td>
@@ -95,7 +108,7 @@
           </td>
           <td data-label="Combustible" th:text="${v.combustible}"></td>
           <td data-label="Km" th:text="${v.kilometraje}"></td>
-          <td data-label="Precio (€)" th:text="${v.precioVenta}"></td>
+          <td data-label="Precio (€)" th:text="${#numbers.formatDecimal(preciosFinales[v.id], 1, 2)}"></td>
           <td data-label="Acciones">
             <div class="acciones">
               <a th:href="@{'/vehiculos/editar/' + ${v.id}}" class="btn-accion btn-editar">✏️ Editar</a>

@@ -46,6 +46,14 @@
             font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
             letter-spacing: 0.06em; color: #6c757d; margin: 20px 0 10px;
         }
+        .foto-preview {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border: 1px solid rgba(0,0,0,0.08);
+            object-fit: cover;
+        }
     </style>
 
     <div class="page-wrapper">
@@ -53,7 +61,8 @@
 
             <h2 th:text="${titulo}">Formulario Vehículo</h2>
 
-            <form th:action="${accion}" th:object="${vehiculo}" method="post">
+            <form th:action="${accion}" th:object="${vehiculo}" method="post" enctype="multipart/form-data">
+                <input type="hidden" th:field="*{fotoUrl}">
 
                 <p class="section-label">Identificación</p>
                 <div class="grid2">
@@ -156,6 +165,15 @@
                             <span th:text="${e.nombre + ' (+ ' + e.precioAdicional + ' €)'}"></span>
                         </label>
                     </div>
+                </div>
+
+                <p class="section-label">Imagen del vehículo</p>
+                <div class="mb-3">
+                    <label>Foto (Cloudinary)</label>
+                    <input type="file" name="fotoFile" class="form-control" accept="image/*">
+                </div>
+                <div class="mb-3" th:if="${vehiculo.fotoUrl != null and !#strings.isEmpty(vehiculo.fotoUrl)}">
+                    <img th:src="${vehiculo.fotoUrl}" alt="Foto vehículo" class="foto-preview">
                 </div>
 
                 <div class="btn-row">

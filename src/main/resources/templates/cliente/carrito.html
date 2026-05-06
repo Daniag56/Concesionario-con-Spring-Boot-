@@ -84,7 +84,7 @@
             <span th:if="${item.vehiculo.extras == null or #lists.isEmpty(item.vehiculo.extras)}">Sin extras</span>
             <span th:if="${item.vehiculo.extras != null and !#lists.isEmpty(item.vehiculo.extras)}" th:text="${#lists.size(item.vehiculo.extras) + ' extras'}"></span>
           </td>
-          <td data-label="Precio" th:text="${item.vehiculo.precioVenta != null ? #numbers.formatDecimal(item.vehiculo.precioVenta, 1, 2) + ' EUR' : 'N/D'}"></td>
+          <td data-label="Precio" th:text="${#numbers.formatDecimal(preciosPorItem[item.id], 1, 2) + ' EUR'}"></td>
           <td data-label="Acciones">
             <div class="acciones">
               <a class="btn-accion btn-detalle" th:href="@{'/cliente/vehiculo/' + ${item.vehiculo.id}}">🔎 Detalle</a>

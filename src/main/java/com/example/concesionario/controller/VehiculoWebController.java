@@ -9,14 +9,18 @@ import com.example.concesionario.repository.ExtraRepository;
 import com.example.concesionario.repository.MarcaRepository;
 import com.example.concesionario.repository.ModeloRepository;
 import com.example.concesionario.repository.VehiculoRepository;
+import com.example.concesionario.service.CloudinaryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/vehiculos")
@@ -27,24 +31,34 @@ public class VehiculoWebController {
     private final MarcaRepository marcaRepository;
     private final ConcesionarioRepository concesionarioRepository;
     private final ExtraRepository extraRepository;
+    private final CloudinaryService cloudinaryService;
 
     public VehiculoWebController(VehiculoRepository vehiculoRepository,
                                  ModeloRepository modeloRepository,
                                  MarcaRepository marcaRepository,
                                  ConcesionarioRepository concesionarioRepository,
-                                 ExtraRepository extraRepository) {
+                                 ExtraRepository extraRepository,
+                                 CloudinaryService cloudinaryService) {
         this.vehiculoRepository = vehiculoRepository;
         this.modeloRepository = modeloRepository;
         this.marcaRepository = marcaRepository;
         this.concesionarioRepository = concesionarioRepository;
         this.extraRepository = extraRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     // ── LISTA ────────────────────────────────────────────────────────────────
 
     @GetMapping("/lista")
     public String listar(Model model) {
-        model.addAttribute("listaVehiculos", vehiculoRepository.findAll());
+        List<Vehiculo> listaVehiculos = vehiculoRepository.findAll();
+        Map<Long, Double> preciosFinales = new HashMap<>();
+        for (Vehiculo vehiculo : listaVehiculos) {
+            preciosFinales.put(vehiculo.getId(), calcularPrecioConExtras(vehiculo));
+        }
+
+        model.addAttribute("listaVehiculos", listaVehiculos);
+        model.addAttribute("preciosFinales", preciosFinales);
         return "vehiculos/lista";
     }
 
@@ -72,6 +86,7 @@ public class VehiculoWebController {
     public String guardar(@ModelAttribute Vehiculo vehiculo,
                       @RequestParam(value = "modelo.id", required = false) Long modeloId,
                       @RequestParam(value = "concesionario.id", required = false) Long concId,
+                      @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile,
                       Model model) {
 
         System.out.println("=== DEBUG VEHICULO POST ===");
@@ -87,7 +102,13 @@ public class VehiculoWebController {
             concesionarioRepository.findById(concId).ifPresent(vehiculo::setConcesionario);
         }
 
+        resolverRelaciones(vehiculo);
+
         try {
+            String fotoUrl = cloudinaryService.uploadVehiculoImage(fotoFile);
+            if (fotoUrl != null) {
+                vehiculo.setFotoUrl(fotoUrl);
+            }
             vehiculoRepository.save(vehiculo);
             return "redirect:/vehiculos/lista";
         } catch (Exception ex) {
@@ -124,6 +145,7 @@ public class VehiculoWebController {
     @PostMapping("/editar/{id}")
     public String guardarEdicion(@PathVariable Long id,
                                  @ModelAttribute Vehiculo actualizado,
+                                 @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile,
                                  Model model) {
         try {
             Vehiculo vehiculo = vehiculoRepository.findById(id).orElseThrow();
@@ -137,8 +159,13 @@ public class VehiculoWebController {
             vehiculo.setPrecioVenta(actualizado.getPrecioVenta());
             vehiculo.setEstado(actualizado.getEstado());
             vehiculo.setCombustible(actualizado.getCombustible());
+            vehiculo.setFotoUrl(actualizado.getFotoUrl());
 
             resolverRelacionesEnEdicion(actualizado, vehiculo);
+            String fotoUrl = cloudinaryService.uploadVehiculoImage(fotoFile);
+            if (fotoUrl != null) {
+                vehiculo.setFotoUrl(fotoUrl);
+            }
 
             vehiculoRepository.save(vehiculo);
             return "redirect:/vehiculos/lista";
@@ -225,4 +252,13 @@ public class VehiculoWebController {
             destino.setExtras(extras);
         }
     }
+
+    private double calcularPrecioConExtras(Vehiculo vehiculo) {
+        double base = vehiculo.getPrecioVenta() == null ? 0.0 : vehiculo.getPrecioVenta();
+        double extras = vehiculo.getExtras() == null ? 0.0 : vehiculo.getExtras().stream()
+                .mapToDouble(e -> e.getPrecioAdicional() == null ? 0.0 : e.getPrecioAdicional())
+                .sum();
+        return base + extras;
+    }
+
 }

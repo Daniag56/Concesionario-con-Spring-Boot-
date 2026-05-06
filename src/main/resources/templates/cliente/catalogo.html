@@ -19,6 +19,14 @@
       transition: 0.2s ease;
     }
     .vehiculo-card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,0.16); }
+    .vehiculo-foto {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+    }
     .vehiculo-title { font-size: 1.1rem; font-weight: 700; margin: 0; }
     .vehiculo-meta { color: #495057; font-size: 0.9rem; margin: 0; }
     .vehiculo-price { font-weight: 700; font-size: 1.5rem; margin: 4px 0; }
@@ -54,11 +62,12 @@
 
     <div class="vehiculos-grid" th:if="${!#lists.isEmpty(vehiculos)}">
       <div class="vehiculo-card" th:each="v : ${vehiculos}">
+        <img th:if="${v.fotoUrl != null and !#strings.isEmpty(v.fotoUrl)}" th:src="${v.fotoUrl}" alt="Foto vehículo" class="vehiculo-foto">
         <h3 class="vehiculo-title" th:text="${(v.modelo != null ? v.modelo.nombre : 'Vehiculo') + ' - ' + (v.matricula != null ? v.matricula : 'Sin matricula')}">Modelo</h3>
         <p class="vehiculo-meta" th:text="${'VIN: ' + v.vin}">VIN</p>
         <p class="vehiculo-meta" th:text="${'Concesionario: ' + (v.concesionario != null ? v.concesionario.nombreComercial : 'N/D')}">Concesionario</p>
         <p class="vehiculo-meta" th:text="${'Estado: ' + v.estado + ' | Combustible: ' + v.combustible}">Estado</p>
-        <div class="vehiculo-price" th:text="${v.precioVenta != null ? #numbers.formatDecimal(v.precioVenta, 1, 2) + ' EUR' : 'N/D'}">0 EUR</div>
+        <div class="vehiculo-price" th:text="${#numbers.formatDecimal(preciosFinales[v.id], 1, 2) + ' EUR'}">0 EUR</div>
         <div class="btn-row">
           <a class="btn-accion btn-detalle" th:href="@{'/cliente/vehiculo/' + ${v.id}}">🔎 Ver detalle</a>
           <form th:action="@{'/cliente/carrito/agregar/' + ${v.id}}" method="post">
